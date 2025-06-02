@@ -1,0 +1,41 @@
+unit uConfigController;
+
+interface
+
+uses
+  System.IniFiles, uConfigApp, System.SysUtils;
+
+type
+  TConfigController = class
+    private
+    public
+      class function SetConfiguracao : TConfigApp;
+
+      class var _Config : TConfigApp;
+  end;
+
+implementation
+
+{ TConfigController }
+
+class function TConfigController.SetConfiguracao: TConfigApp;
+begin
+  Result := nil;
+
+  try
+
+    if not Assigned(_Config) then
+      _Config := TConfigApp.Create;
+
+    with _Config do
+    begin
+      ExecutablePath := ExtractFilePath(ParamStr(0));
+    end;
+
+    Result := _Config;
+  except
+    raise Exception.Create('Erro ao setar as configurações!');
+  end;
+end;
+
+end.

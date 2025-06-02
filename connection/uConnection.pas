@@ -1,0 +1,77 @@
+unit uConnection;
+
+interface
+
+uses
+  uConnectionParameters,
+  Inifiles,FireDAC.Comp.UI,FireDAC.Stan.Factory,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, Data.DB, FireDAC.Comp.Client, FireDAC.Phys.MySQLDef,
+  FireDAC.Phys.FB, System.SysUtils, FireDAC.DApt;
+
+type
+  TConnection = class
+    private
+      FConnection : TFDConnection;
+      FQuery      : TFDQuery;
+      FWaitCursor : TFDGUIxWaitCursor;
+
+      procedure SetUpConnection;
+
+    public
+      constructor Create;
+      destructor Destroy; override;
+
+      function GetConnection : TFDConnection;
+      function GetQuery: TFDQuery;
+  end;
+
+implementation
+
+{ TConnection }
+
+constructor TConnection.Create;
+begin
+  FConnection := TFDConnection.Create(nil);
+  FQuery      := TFDQuery.Create(nil);
+  FWaitCursor := nil;
+
+  Self.SetUpConnection();
+end;
+
+destructor TConnection.Destroy;
+begin
+  FConnection.Free;
+  FQuery.Free;
+
+  if Assigned(FWaitCursor) then
+    FreeAndNil(FWaitCursor);
+
+  inherited;
+end;
+
+function TConnection.GetConnection: TFDConnection;
+begin
+  Result := FConnection;
+end;
+
+function TConnection.GetQuery : TFDQuery;
+begin
+  FQuery.Connection := FConnection;
+  Result := FQuery;
+end;
+
+procedure TConnection.SetUpConnection;
+begin
+  with FConnection do
+  begin
+    Params.DriverID := 'SQLite';
+    Params.Database := ExtractFilePath(ParamStr(0)) + 'database-app.sqlite3';
+
+    LoginPrompt := False;
+    Connected := True;
+  end;
+end;
+
+
+end.

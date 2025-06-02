@@ -1,0 +1,65 @@
+unit uFrListItemSQL;
+
+interface
+
+uses
+  uTypes,
+
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, CFX.Controls, CFX.TextBox,
+  CFX.Button, Vcl.ExtCtrls, CFX.Panels, CFX.ButtonDesign;
+
+type
+  TfrListItemSQL = class(TFrame)
+    fxTextTitleSQL: FXTextBox;
+    fxTextHour: FXTextBox;
+    FXPanel1: FXPanel;
+    FXPanel2: FXPanel;
+  private
+    FStatusQuery: TStatusQuery;
+
+    procedure SetStatusQuery(const Value: TStatusQuery);
+
+    procedure SetItemColorSuccess;
+    procedure SetItemColorFailed;
+  public
+    property StatusQuery : TStatusQuery read FStatusQuery write SetStatusQuery;
+
+  end;
+
+implementation
+
+var
+  iFrListItemSQL : TfrListItemSQL;
+
+{$R *.dfm}
+
+{ TfrListItemSQL }
+
+procedure TfrListItemSQL.SetItemColorSuccess;
+begin
+  Self.Color := $00DDE7D1;
+  Self.fxTextTitleSQL.CustomColors.Accent := $007AF567;
+  Self.fxTextTitleSQL.UseAccentAsForeground := True;
+end;
+
+procedure TfrListItemSQL.SetItemColorFailed;
+begin
+  Self.Color := $00DAD7F8;
+  Self.fxTextTitleSQL.CustomColors.Accent := $003F3FE9;
+  Self.fxTextTitleSQL.UseAccentAsForeground := True;
+
+end;
+
+procedure TfrListItemSQL.SetStatusQuery(const Value: TStatusQuery);
+begin
+  FStatusQuery := Value;
+  case FStatusQuery of
+    stSuccess:
+      SetItemColorSuccess;
+    stFailed:
+      SetItemColorFailed;
+  end;
+end;
+
+end.

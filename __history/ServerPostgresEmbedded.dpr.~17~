@@ -1,0 +1,22 @@
+program ServerPostgresEmbedded;
+
+uses
+  Vcl.Forms,
+  uFrmMain in 'forms\uFrmMain.pas' {Form1},
+  uFrListItemSQL in 'forms\frames\uFrListItemSQL.pas' {frListItemSQL: TFrame},
+  uFrToastMessage in 'forms\frames\uFrToastMessage.pas' {frToastMessage: TFrame},
+  uInstanceController in 'connection\uInstanceController.pas',
+  uConnection in 'connection\uConnection.pas',
+  uShellController in 'controller\uShellController.pas',
+  uConfigController in 'controller\uConfigController.pas',
+  uServerTabController in 'controller\uServerTabController.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmMain, frmMain);
+  //ReportMemoryLeaksOnShutdown := True;
+  Application.Run;
+end.

@@ -1,0 +1,31 @@
+unit uConnectionParameters;
+
+interface
+
+type
+  TConnectionParameters = class
+    private
+      FCharacterSet: String;
+      FPathBin: String;
+      FPathBackup: String;
+      FPort: String;
+      FDatabase: String;
+      FPassword: String;
+      FUser: String;
+      FPathData: String;
+      FVersion: String;
+    public
+      property Database     : String read FDatabase     write FDatabase;
+      property User         : String read FUser         write FUser;
+      property Password     : String read FPassword     write FPassword;
+      property Port         : String read FPort         write FPort;
+      property Version      : String read FVersion      write FVersion;
+      property CharacterSet : String read FCharacterSet write FCharacterSet;
+      property PathData     : String read FPathData     write FPathData;
+      property PathBin      : String read FPathBin      write FPathBin;
+      property PathBackup   : String read FPathBackup   write FPathBackup;
+  end;
+
+implementation
+
+end.

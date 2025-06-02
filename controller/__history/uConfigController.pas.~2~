@@ -1,0 +1,36 @@
+unit uConfigController;
+
+interface
+
+uses
+  System.IniFiles, uConfigApp, System.SysUtils;
+
+type
+  TConfigController = class
+    private
+    public
+      class function SetConfiguracao : TConfigApp;
+
+      class var _Config : TConfigApp;
+  end;
+
+implementation
+
+{ TConfigController }
+
+class function TConfigController.SetConfiguracao: TConfigApp;
+begin
+  Result := nil;
+
+  if not Assigned(_Config) then
+    _Config := TConfigApp.Create;
+
+  with _Config do
+  begin
+    PathExecutavel := ExtractFilePath(ParamStr(0));
+  end;
+
+  Result := _Config;
+end;
+
+end.

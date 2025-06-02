@@ -1,0 +1,127 @@
+unit uPgDataFolderValidator;
+
+interface
+
+uses
+  System.SysUtils,
+  Winapi.Windows,
+  System.Classes;
+
+type
+  TValidationPair = record
+    FieldName: string;
+    FieldValue: string;
+  end;
+
+  TPgDataFolderValidator = (
+    pgDataValid,
+    pgDataPathNotFound,
+    pgDataMissingBaseSubDir,
+    pgDataMissingGlobalSubDir,
+    pgDataMissingPgWalSubDir,
+    pgDataMissingPostmasterPid,
+    pgDataMissingPgVersionFile,
+    pgDataInvalidPgVersionContent
+  );
+
+function IsPostgresDataFolder(const FolderPath: string;
+                              out ValidationResult: TPgDataFolderValidator;
+                              out VersionResult: string): Boolean;
+
+implementation
+
+function IsPostgresDataFolder(const FolderPath: string;
+                              out ValidationResult: TPgDataFolderValidator;
+                              out VersionResult: string): Boolean;
+var
+  BaseDir: string;
+  GlobalDir: string;
+  PgWalDir: string;
+  PgXlogDir: string;
+  PostmasterPidFile: string;
+  PostmasterOptsFile: string;
+  PgVersionFile: string;
+  PgVersionContent: TStringList;
+  DummyFloat: Double;
+begin
+  Result := False;
+  ValidationResult := pgDataPathNotFound;
+  VersionResult := '';
+
+
+  if not DirectoryExists(FolderPath) then
+    Exit;
+
+  BaseDir := IncludeTrailingPathDelimiter(FolderPath) + 'base';
+  GlobalDir := IncludeTrailingPathDelimiter(FolderPath) + 'global';
+  PgWalDir := IncludeTrailingPathDelimiter(FolderPath) + 'pg_wal';
+  PgXlogDir := IncludeTrailingPathDelimiter(FolderPath) + 'pg_xlog';
+  PostmasterPidFile := IncludeTrailingPathDelimiter(FolderPath) + 'postmaster.pid';
+  PostmasterOptsFile := IncludeTrailingPathDelimiter(FolderPath) + 'postmaster.opts';
+  PgVersionFile := IncludeTrailingPathDelimiter(FolderPath) + 'PG_VERSION';
+
+  if not DirectoryExists(BaseDir) then
+  begin
+    ValidationResult := pgDataMissingBaseSubDir;
+    Exit;
+  end;
+
+  if not DirectoryExists(GlobalDir) then
+  begin
+    ValidationResult := pgDataMissingGlobalSubDir;
+    Exit;
+  end;
+
+  if not DirectoryExists(PgWalDir) and not DirectoryExists(PgXlogDir) then
+  begin
+    ValidationResult := pgDataMissingPgWalSubDir;
+    Exit;
+  end;
+
+  if not (FileExists(PostmasterPidFile) or FileExists(PostmasterOptsFile)) then
+  begin
+    ValidationResult := pgDataMissingPostmasterPid;
+    Exit;
+  end;
+
+  if not FileExists(PgVersionFile) then
+  begin
+    ValidationResult := pgDataMissingPgVersionFile;
+    Exit;
+  end;
+
+  PgVersionContent := TStringList.Create;
+  try
+    try
+      PgVersionContent.LoadFromFile(PgVersionFile);
+      if PgVersionContent.Count > 0 then
+      begin
+        VersionResult := Trim(PgVersionContent[0]);
+        if not TryStrToFloat(StringReplace(VersionResult, '.', '', [rfReplaceAll]), DummyFloat) then
+        begin
+          ValidationResult := pgDataInvalidPgVersionContent;
+          Exit;
+        end;
+      end
+      else
+      begin
+        ValidationResult := pgDataInvalidPgVersionContent;
+        Exit;
+      end;
+    except
+      on E: Exception do
+      begin
+        ValidationResult := pgDataInvalidPgVersionContent;
+        Exit;
+      end;
+    end;
+  finally
+    PgVersionContent.Free;
+  end;
+
+  ValidationResult := pgDataValid;
+  Result := True;
+end;
+
+end.
+

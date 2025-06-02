@@ -1,0 +1,96 @@
+unit uPostgresVersion;
+
+interface
+
+uses
+  uInstanceController,
+
+  FireDAC.Stan.Error,FireDAC.DatS,FireDAC.Comp.UI,
+  System.SysUtils, System.Classes, Data.DB,
+  FireDAC.Comp.Client, FireDAC.Stan.Def, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Pool, FireDAC.Stan.Async,
+  FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef,
+  FireDAC.DApt, FireDAC.UI.Intf, FireDAC.VCLUI.Wait,
+  System.Generics.Collections;
+
+type
+  TPostgresVersion = class  // Representa tabela no SQLite3
+    private
+      FVersion: Integer;
+      FId: Integer;
+      FPathBinPG: String;
+      FPostgresName: String;
+
+    public
+      property Id: Integer          read FId           write FId;
+      property PostgresName: String read FPostgresName write FPostgresName;
+      property Version: Integer     read FVersion      write FVersion;
+      property PathBinPG: String    read FPathBinPG    write FPathBinPG;
+
+
+
+      class function GetAllVersions : TObjectList<TPostgresVersion>;
+      class function FetchBinaryPathByVersion(AVersion: Integer): String;
+  end;
+
+implementation
+
+{ TPostgresVersion }
+
+class function TPostgresVersion.GetAllVersions: TObjectList<TPostgresVersion>;
+var
+  vQuery : TFDQuery;
+  vPGVersion : TPostgresVersion;
+begin
+
+  Result := TObjectList<TPostgresVersion>.Create;
+
+  vQuery := TInstanceController.GetInstance().SQLiteConnection.GetQuery;
+  try
+    with vQuery do
+    begin
+      SQL.Text := 'SELECT version FROM tb_postgres_versions';
+      Open;
+
+      while not Eof do
+      begin
+        vPGVersion          := TPostgresVersion.Create;
+        vPGVersion.FVersion := FieldByName('version').AsInteger;
+
+        Result.Add(vPGVersion);
+      Next;
+      end;
+    end;
+  except
+    raise Exception.Create('Erro ao pegar as versões no banco.');
+  end;
+end;
+
+
+class function TPostgresVersion.FetchBinaryPathByVersion(AVersion : Integer) : String;
+var
+  vQuery : TFDQuery;
+begin
+  try
+    vQuery := TInstanceController.GetInstance().SQLiteConnection.GetQuery;
+    try
+
+      vQuery.SQL.Text := 'SELECT path_bin_pg '+
+                         'from tb_postgres_versions '+
+                         'where version = :Version';
+
+      vQuery.ParamByName('Version').AsInteger := AVersion;
+      vQuery.Open;
+
+      Result := vQuery.FieldByName('path_bin_pg').AsString;
+    except
+      raise Exception.Create('Erro ao pegar o path dos binários no banco de dados!');
+    end;
+
+  finally
+    if Assigned(vQuery) then
+      FreeAndNil(vQuery);
+  end;
+end;
+
+end.

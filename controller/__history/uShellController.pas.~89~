@@ -1,0 +1,226 @@
+﻿unit uShellController;
+
+interface
+
+uses
+   uConnectionParameters,
+
+   WinSock,         Winapi.WinSock2,
+   ShellAPI, Windows, SysUtils, System.Classes;
+
+type
+  u_long = Cardinal;
+
+  TShellController = class
+    private
+
+    public
+      class procedure InitializeServer(AParams : TConnectionParameters);
+      class procedure StopServer(AParams : TConnectionParameters);
+
+      class function IsServerRunning(AParams : TConnectionParameters): Boolean;
+      class function ListDatabases(AParams : TConnectionParameters): TStringList;
+  end;
+
+implementation
+
+{ TShellController }
+
+
+class procedure TShellController.InitializeServer(AParams : TConnectionParameters);
+var
+  StartupInfo: TStartupInfo;
+  ProcessInfo: TProcessInformation;
+  CmdLine: string;
+  AppPath: string;
+begin
+  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
+  StartupInfo.cb := SizeOf(StartupInfo);
+  StartupInfo.dwFlags := STARTF_USESHOWWINDOW;
+  StartupInfo.wShowWindow := SW_HIDE;
+
+  AppPath := IncludeTrailingPathDelimiter(AParams.PathBin) + 'pg_ctl.exe';
+
+  CmdLine := Format('"%s" -D "%s" start -o "-p %s"', [AppPath, AParams.PathData, AParams.Port]);
+
+  if not CreateProcess(nil, PChar(CmdLine), nil, nil, False, 0, nil, nil, StartupInfo, ProcessInfo) then
+    raise Exception.CreateFmt('Erro ao iniciar o servidor: %s', [SysErrorMessage(GetLastError)]);
+
+  // Fecha os handles do processo (o processo segue rodando em segundo plano)
+  CloseHandle(ProcessInfo.hProcess);
+  CloseHandle(ProcessInfo.hThread);
+end;
+
+
+class procedure TShellController.StopServer(AParams : TConnectionParameters);
+var
+  StartupInfo: TStartupInfo;
+  ProcessInfo: TProcessInformation;
+  CmdLine: string;
+  AppPath: string;
+begin
+  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
+  StartupInfo.cb := SizeOf(StartupInfo);
+  StartupInfo.dwFlags := STARTF_USESHOWWINDOW;
+  StartupInfo.wShowWindow := SW_HIDE;
+
+  AppPath := IncludeTrailingPathDelimiter(AParams.PathBin) + 'pg_ctl.exe';
+
+  // Comando para parar o servidor
+  CmdLine := Format('"%s" -D "%s" stop', [AppPath, AParams.PathData]);
+
+  if not CreateProcess(nil, PChar(CmdLine), nil, nil, False, 0, nil, nil, StartupInfo, ProcessInfo) then
+    raise Exception.CreateFmt('Erro ao parar o servidor: %s', [SysErrorMessage(GetLastError)]);
+
+  // Fecha os handles
+  CloseHandle(ProcessInfo.hProcess);
+  CloseHandle(ProcessInfo.hThread);
+end;
+
+
+class function TShellController.IsServerRunning(AParams : TConnectionParameters): Boolean;
+var
+  AppPath, CmdLine: string;
+  SecurityAttr: TSecurityAttributes;
+  ReadPipe, WritePipe: THandle;
+  StartupInfo: TStartupInfo;
+  ProcessInfo: TProcessInformation;
+  Buffer: array[0..255] of AnsiChar;
+  BytesRead: DWORD;
+  Output: string;
+begin
+  Result := False;
+  AppPath := IncludeTrailingPathDelimiter(AParams.PathBin) + 'pg_ctl.exe';
+  CmdLine := Format('"%s" -D "%s" status', [AppPath, AParams.PathData]);
+
+  // Configura os pipes para capturar a saída
+  SecurityAttr.nLength := SizeOf(SecurityAttr);
+  SecurityAttr.bInheritHandle := True;
+  SecurityAttr.lpSecurityDescriptor := nil;
+
+  if not CreatePipe(ReadPipe, WritePipe, @SecurityAttr, 0) then
+    Exit;
+
+  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
+  StartupInfo.cb := SizeOf(StartupInfo);
+  StartupInfo.dwFlags := STARTF_USESTDHANDLES or STARTF_USESHOWWINDOW;
+  StartupInfo.wShowWindow := SW_HIDE;
+  StartupInfo.hStdOutput := WritePipe;
+  StartupInfo.hStdError := WritePipe;
+
+  if not CreateProcess(nil, PChar(CmdLine), nil, nil, True, 0, nil, nil, StartupInfo, ProcessInfo) then
+  begin
+    CloseHandle(ReadPipe);
+    CloseHandle(WritePipe);
+    Exit;
+  end;
+
+  // Fecha o handle de escrita para que possamos ler a saída
+  CloseHandle(WritePipe);
+
+  Output := '';
+  repeat
+    FillChar(Buffer, SizeOf(Buffer), 0);
+    ReadFile(ReadPipe, Buffer, SizeOf(Buffer) - 1, BytesRead, nil);
+    if BytesRead > 0 then
+      Output := Output + string(AnsiString(Buffer));
+  until BytesRead = 0;
+
+  CloseHandle(ReadPipe);
+  CloseHandle(ProcessInfo.hProcess);
+  CloseHandle(ProcessInfo.hThread);
+
+
+  Result := Pos('server is running', LowerCase(Output)) > 0;
+end;
+
+
+class function TShellController.ListDatabases(AParams : TConnectionParameters): TStringList;
+var
+  AppPath, CmdLine: string;
+  SecurityAttr: TSecurityAttributes;
+  ReadPipe, WritePipe: THandle;
+  StartupInfo: TStartupInfo;
+  ProcessInfo: TProcessInformation;
+  Buffer: array[0..255] of AnsiChar;
+  BytesRead: DWORD;
+  Output, Line: string;
+  SL: TStringList;
+  i: Integer;
+begin
+  Result := TStringList.Create;
+  AppPath := IncludeTrailingPathDelimiter(AParams.PathBin) + 'psql.exe';
+
+  // Define a senha no ambiente antes de executar
+  SetEnvironmentVariable('PGPASSWORD', PChar(AParams.Password));
+
+  CmdLine := Format('"%s" -U %s -p %s -d postgres -c "SELECT datname FROM pg_database WHERE datistemplate = false;"',
+    [AppPath, AParams.User, AParams.Port]);
+
+  SecurityAttr.nLength := SizeOf(SecurityAttr);
+  SecurityAttr.bInheritHandle := True;
+  SecurityAttr.lpSecurityDescriptor := nil;
+
+  if not CreatePipe(ReadPipe, WritePipe, @SecurityAttr, 0) then
+    Exit;
+
+  ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
+  StartupInfo.cb := SizeOf(StartupInfo);
+  StartupInfo.dwFlags := STARTF_USESTDHANDLES or STARTF_USESHOWWINDOW;
+  StartupInfo.wShowWindow := SW_HIDE;
+  StartupInfo.hStdOutput := WritePipe;
+  StartupInfo.hStdError := WritePipe;
+
+  if not CreateProcess(nil, PChar(CmdLine), nil, nil, True, 0, nil, nil, StartupInfo, ProcessInfo) then
+  begin
+    CloseHandle(ReadPipe);
+    CloseHandle(WritePipe);
+    Exit;
+  end;
+
+  CloseHandle(WritePipe);
+
+  Output := '';
+  repeat
+    FillChar(Buffer, SizeOf(Buffer), 0);
+    ReadFile(ReadPipe, Buffer, SizeOf(Buffer) - 1, BytesRead, nil);
+    if BytesRead > 0 then
+      Output := Output + string(AnsiString(Buffer));
+  until BytesRead = 0;
+
+  CloseHandle(ReadPipe);
+  CloseHandle(ProcessInfo.hProcess);
+  CloseHandle(ProcessInfo.hThread);
+
+  // Pós-processamento: extrair linhas com nomes de banco válidos
+  SL := TStringList.Create;
+  try
+    SL.Text := Output;
+    for i := 0 to SL.Count - 1 do
+    begin
+      Line := Trim(SL[i]);
+      if (Line <> '') and (Pos('|', Line) = 0) and (Pos('datname', LowerCase(Line)) = 0)
+         and (not Line.StartsWith('-')) and (not Line.StartsWith('(')) then
+        Result.Add(Line);
+    end;
+  finally
+    SL.Free;
+  end;
+
+  // Remove a variável de ambiente para segurança
+  SetEnvironmentVariable('PGPASSWORD', nil);
+end;
+
+
+end.
+
+// comandos nos binarios
+
+// C:\Program Files\PostgresSQL\9.5\bin\pg_ctl -D C:\BACKUP\Ink\9.5\data start
+
+
+// pg_ctl.exe -D caminho\pasta\data start -o "-p 5432"
+
+
+// psql.exe -U usuario -p 5432 -l // -l para listar os bancos
+

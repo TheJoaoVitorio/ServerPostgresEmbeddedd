@@ -1,0 +1,13 @@
+unit uSQLTabController;
+
+interface
+
+type
+  TSQLTabController = class
+    private
+    public
+  end;
+
+implementation
+
+end.

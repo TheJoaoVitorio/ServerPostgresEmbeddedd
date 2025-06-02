@@ -1,0 +1,21 @@
+2025-05-01 17:53:00 -03 LOG:  starting PostgreSQL 13.20, compiled by Visual C++ build 1942, 64-bit
+2025-05-01 17:53:00 -03 LOG:  listening on IPv6 address "::", port 5432
+2025-05-01 17:53:00 -03 LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2025-05-01 17:53:00 -03 LOG:  database system was shut down at 2025-05-01 17:52:43 -03
+2025-05-01 17:53:00 -03 LOG:  database system is ready to accept connections
+2025-05-01 18:11:56 -03 FATAL:  database "template0" is not currently accepting connections
+2025-05-01 18:11:56 -03 FATAL:  database "template0" is not currently accepting connections
+2025-05-01 18:12:00 -03 FATAL:  database "template0" is not currently accepting connections
+2025-05-01 18:12:00 -03 FATAL:  database "template0" is not currently accepting connections
+2025-05-01 18:12:04 -03 FATAL:  database "template0" is not currently accepting connections
+2025-05-01 18:12:04 -03 FATAL:  database "template0" is not currently accepting connections
+2025-05-01 21:12:54 -03 LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	
+2025-05-01 21:12:54 -03 LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	
+2025-05-01 21:12:54 -03 LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	
+2025-05-01 21:12:55 -03 LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	
+2025-05-01 21:12:55 -03 LOG:  could not receive data from client: An existing connection was forcibly closed by the remote host.
+	

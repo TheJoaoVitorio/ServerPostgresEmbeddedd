@@ -1,0 +1,969 @@
+﻿unit uFrmMain;
+
+interface
+
+uses
+  //Validators
+  uPgDataFolderValidator,
+  uPgConnectionValidator,
+
+  //Controllers
+  uServerTabController,
+  uServerOnlineTabController,
+
+  //Entities
+  uTypes,
+  uConnectionParameters,
+
+  //Frames
+  uFrListItemSQL,
+  uFrToastMessage,
+  uFrListItemDatabase,
+
+  //CFX LIBRARY
+  CFX.Forms, CFX.Colors, CFX.ThemeManager,
+  CFX.ButtonDesign, CFX.Checkbox, CFX.Panels,
+  CFX.StandardIcons, CFX.Dialogs, CFX.BlurMaterial,
+  CFX.Selector,CFX.Classes, CFX.PopupMenu, CFX.Constants,
+  CFX.Types, CFX.ToolTip, CFX.Hint, CFX.Slider, CFX.ImageList,
+  CFX.Controls, CFX.Test, CFX.TextBox, CFX.RadioButton,
+  CFX.Scrollbar, CFX.ScrollBox, CFX.Edit, CFX.Button,
+  CFX.PopupConnector, CFX.ScrollText, CFX.FormClasses,
+  CFX.Messages, CFX.VarHelpers, CFX.Graphics, CFX.RatingControl, CFX.Effects,
+  CFX.Progress, CFX.GDI, CFX.Utilities, CFX.QuickDialogs, CFX.Instances,
+  CFX.PaintBox, CFX.Lists, CFX.TabStrip, CFX.AppManager, CFX.Shapes,
+  CFX.Layouts, CFX.TitlebarPanel, CFX.FormTemplates,
+
+  Datasnap.DBClient, System.Generics.Collections,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, System.Character ,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.TitleBarCtrls, Vcl.ExtCtrls,
+  Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Imaging.pngimage, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.Imaging.jpeg, System.Skia, Vcl.Skia;
+
+type
+  TfrmMain = class(FXForm)
+    fxTitleMain: FXTitleBarPanel;
+    fxShapeContainer: FXShapeRoundedSquare;
+    fxPanelContainer: FXPanel;
+    fxPanelContent: FXPanel;
+    fxPanelHeaderContent: FXPanel;
+    fxSelectorPrincipal: FXSelector;
+    fxPanelPageControl: FXPanel;
+    PageControlPrincipal: TPageControl;
+    tabServer: TTabSheet;
+    tabSQL: TTabSheet;
+    tabRestore: TTabSheet;
+    fxPanelServer: FXPanel;
+    fxPanelRestore: FXPanel;
+    fxPanelSQL: FXPanel;
+    fxPanelSQLTabs: FXPanel;
+    fxSelectorSQL: FXSelector;
+    fxPanelSQLPageControl: FXPanel;
+    PageControlSQL: TPageControl;
+    tabQuery: TTabSheet;
+    fxPanelQuery: FXPanel;
+    tabQueryHistory: TTabSheet;
+    fxPanelQueryHistory: FXPanel;
+    fxPanelSelectDatabase: FXPanel;
+    fxSelectSQLDatabase: FXButton;
+    fxPopupSQLSelectDatabase: FXPopupMenu;
+    mmQuery: TMemo;
+    lbxCountLinesQuery: TListBox;
+    fxSQLQuery: FXPanel;
+    fxPanelShowQuery: FXPanel;
+    fxPanelShowQueryContainer: FXPanel;
+    fxPanelShowQueryCard: FXPanel;
+    fxShapeShowQueryCard: FXShapeRoundedSquare;
+    fxPanelCardContent: FXPanel;
+    fxPanelCardHeader: FXPanel;
+    fxPanelCardMemoQuery: FXPanel;
+    imgCopyTextQuery: TImage;
+    fxPanelListQueries: FXPanel;
+    fxPanelHeaderListQueries: FXPanel;
+    fxTextHeaderListQueries: FXTextBox;
+    fxPanelListContent: FXPanel;
+    fxShapeListQueries: FXShapeRoundedSquare;
+    fxSectionContentList: FXPanel;
+    fxScrollBoxListQueries: FXScrollBox;
+    fxExecAction: FXButton;
+    Splitter1: TSplitter;
+    fxPanelGridQuery: FXPanel;
+    fxShapeGridQuery: FXShapeRoundedSquare;
+    fxPanelGridQueryContent: FXPanel;
+    dbGridQueryResults: TDBGrid;
+    fxPanelServerConnect: FXPanel;
+    fxShapeServerConnect: FXShapeRoundedSquare;
+    fxPanelServerConnectContent: FXPanel;
+    fxPanelServerContentLeft: FXPanel;
+    fxPanelServerConnectRight: FXPanel;
+    FXPanel1: FXPanel;
+    fxPanelHeaderIconLeft: FXPanel;
+    Image1: TImage;
+    fxTextTitleHeaderServer: FXTextBox;
+    FXTextBox2: FXTextBox;
+    fxPanelTitleHeaderServer: FXPanel;
+    fxPanelParagraph1: FXPanel;
+    FXTextBox1: FXTextBox;
+    FXTextBox3: FXTextBox;
+    fxPanelServerTitleRight: FXPanel;
+    FXTextBox4: FXTextBox;
+    fxInputVersions: FXPanel;
+    FXTextBox5: FXTextBox;
+    FXPanel3: FXPanel;
+    fxSelectVersion: FXButton;
+    fxPopupVersionsPostgres: FXPopupMenu;
+    fxPanelServerActions: FXPanel;
+    fxButtonConnect: FXButton;
+    fxButtonReset: FXButton;
+    fxInputPort: FXPanel;
+    FXTextBox8: FXTextBox;
+    FXPanel6: FXPanel;
+    fxEditPort: FXEdit;
+    fxInputDatabase: FXPanel;
+    FXScrollBox1: FXScrollBox;
+    fxInputUser: FXPanel;
+    FXTextBox10: FXTextBox;
+    FXPanel8: FXPanel;
+    fxEditUser: FXEdit;
+    fxInputPassword: FXPanel;
+    FXTextBox11: FXTextBox;
+    FXPanel9: FXPanel;
+    fxEditPassword: FXEdit;
+    mmCardMemoQuery: TMemo;
+    fxButtonGetFolderDatabase: FXButton;
+    FXTextBox6: FXTextBox;
+    FXPanel2: FXPanel;
+    OpenDialog1: TOpenDialog;
+    tabOnline: TTabSheet;
+    fxPanelOnline: FXPanel;
+    FXPanel5: FXPanel;
+    fxPanelTextTimerServer: FXPanel;
+    fxPanelSvgImageAnimate: FXPanel;
+    SkAnimatedImage2: TSkAnimatedImage;
+    fxTextTimerServerOnline: FXTextBox;
+    TimerServerOnline: TTimer;
+    fxPanelTextConectado: FXPanel;
+    fxTextConectado: FXTextBox;
+    fxPanelTextConnections: FXPanel;
+    fxTextUserServerOnline: FXTextBox;
+    imgIconUser: TImage;
+    fxPanelUserText: FXPanel;
+    fxPanelPassText: FXPanel;
+    imgIconPass: TImage;
+    fxTextPassServerOnline: FXTextBox;
+    fxPanelPortText: FXPanel;
+    imgIconPort: TImage;
+    fxTextPortServerOnline: FXTextBox;
+    fxPanelPostgresServerOnlin: FXPanel;
+    imgIconPostgres: TImage;
+    fxTextPostgresServerOnline: FXTextBox;
+    fxPanelConfiguracoesTitle: FXPanel;
+    imgIconConfig: TImage;
+    fxTextConfiguracoesServerOnlineTitle: FXTextBox;
+    FXPanel4: FXPanel;
+    FXShapeRoundedSquare1: FXShapeRoundedSquare;
+    fxPanelBancoDeDadosTitle: FXPanel;
+    FXPanel15: FXPanel;
+    imgIconDatabase: TImage;
+    fxTextBancoDeDadosTitle: FXTextBox;
+    FXShapeRoundedSquare2: FXShapeRoundedSquare;
+    fxPanelConfiguracoesContent: FXPanel;
+    fxPanelBancoDeDadosContent: FXPanel;
+    FXScrollBox3: FXScrollBox;
+    fxScrollListDatabases: FXScrollBox;
+    FXPanel7: FXPanel;
+    fxButtonDisconectarServer: FXButton;
+    procedure FormCreate(Sender: TObject);
+    procedure fxSelectorPrincipalChange(Sender: TObject);
+    procedure fxSelectorSQLChange(Sender: TObject);
+    procedure mmQueryChange(Sender: TObject);
+    procedure mmQueryKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure mmQueryKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure tabSQLShow(Sender: TObject);
+    procedure tabQueryHistoryShow(Sender: TObject);
+    procedure fxPanelShowQueryCardResize(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure tabQueryHistoryResize(Sender: TObject);
+    procedure dbGridQueryResultsDrawColumnCell(Sender: TObject;
+      const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure PageControlPrincipalResize(Sender: TObject);
+    procedure fxButtonResetClick(Sender: TObject);
+    procedure fxPopupVersionsPostgresBeforePopup(Sender: TObject;
+      var CanPopup: Boolean; Point: TPoint);
+    procedure FormShow(Sender: TObject);
+    procedure fxPopupVersionsPostgresItemClick(Sender: TObject;
+      Item: FXPopupComponent; Index: Integer);
+    procedure fxButtonGetFolderDatabaseClick(Sender: TObject);
+    procedure fxButtonConnectClick(Sender: TObject);
+    procedure HandleToastDestroyed(Sender: TObject);
+    procedure TimerServerOnlineTimer(Sender: TObject);
+    procedure fxButtonDisconectarServerClick(Sender: TObject);
+  private
+
+    DarkColorBorder : FXColor;
+
+    TabEditMap : TDictionary<Integer, FXEdit>;
+    CdsGridQuery : TClientDataSet;
+    DsGridQuery : TDataSource;
+
+    FrameToast : TfrToastMessage;
+
+
+    FChronometerSeconds: Integer;
+    FisServerConnect: Boolean;
+
+    procedure SetTitleForm;
+    procedure SetThemeApplication;
+    procedure DisplaySelectedTab(FIndex : Integer; FPageControl : TPageControl);
+    procedure DisableTabHeader(FPageControl : TPageControl);
+    procedure DisplayTabIndexDefaultPageControl;
+    procedure UpdateListboxLinesQuery;
+    procedure AppMessage(var Msg: TMsg; var Handled: Boolean);
+    procedure CreateObjects;
+    procedure DestroyObjects;
+    procedure SettingsUIGrid;
+    procedure SettingsObjetos;
+    procedure ResetInputs;
+    procedure AdjustsTabOrderEdits(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure SettingsTabMapEdits;
+    procedure SetEventTabOrderEditsServer;
+    procedure RemoveLeadingIconsPopUp(FPopup: FxPopUpMenu);
+    procedure ClearShortCutPopUp(FPopup: FxPopUpMenu);
+    procedure FillItemsPopupVersions;
+    procedure GetPathFolderDataProvidedByUser(FDataPath: TFileName);
+    function ValidateFields(AParams : TConnectionParameters) : Boolean;
+    function ValidateFolder(AParams : TConnectionParameters) : Boolean;
+    function GetValuesParamsConnection(AObject : TConnectionParameters): TConnectionParameters;
+    procedure InitializeServer(AParams: TConnectionParameters);
+    function CheckConnectionServer(AParams: TConnectionParameters): Boolean;
+    procedure CloseServer;
+    procedure SetIsServerConnect(const Value: Boolean);
+    procedure DisplayServerOnlineInfoUI(AParams: TConnectionParameters);
+    procedure DisplayServerOnlineListDatabasesUI(AParams : TConnectionParameters);
+    procedure FillScrollBoxWithFrameDatabaseItem(AScrollBox: FXScrollBox;
+      AList: TStringList);
+
+    property isServerConnect : Boolean read FisServerConnect write SetIsServerConnect;
+  public
+
+  end;
+
+type
+    TDBGridCustom = class(TDBGrid);
+
+var
+  frmMain: TfrmMain;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TfrmMain.FormCreate(Sender: TObject);
+begin
+  SetTitleForm;
+  SetThemeApplication;
+  DisableTabHeader(PageControlPrincipal);
+  DisableTabHeader(PageControlSQL);
+  DisplayTabIndexDefaultPageControl;
+  CreateObjects;
+  SettingsUIGrid;
+  SettingsObjetos;
+  SetEventTabOrderEditsServer;
+  Application.OnMessage := AppMessage;
+end;
+
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+  FillItemsPopupVersions;
+end;
+
+
+procedure TfrmMain.FormDestroy(Sender: TObject);
+begin
+  DestroyObjects;
+  CloseServer;
+end;
+
+
+procedure TfrmMain.CreateObjects;
+begin
+  CdsGridQuery := TClientDataSet.Create(nil);
+  DsGridQuery := TDataSource.Create(nil);
+  TabEditMap := TDictionary<Integer, FXEdit>.Create;
+end;
+
+
+procedure TfrmMain.DestroyObjects;
+begin
+  if Assigned(CdsGridQuery) then
+    FreeAndNil(CdsGridQuery);
+
+  if Assigned(DsGridQuery) then
+    FreeAndNil(DsGridQuery);
+
+  if Assigned(TabEditMap) then
+    FreeAndNil(TabEditMap);
+end;
+
+
+procedure TfrmMain.CloseServer;
+var
+  PathBin : String;
+begin
+  if fxSelectVersion.Text <> 'Selecione um item' then
+  begin
+    PathBin := IncludeTrailingPathDelimiter(
+             StringReplace(ExtractFilePath(ParamStr(0)) + TServerTabController.GetPathBin(fxSelectVersion.Text.ToInteger), '/', '\', [rfReplaceAll])
+            );
+
+    TServerTabController.StopServer(
+                                      PathBin,
+                                      fxButtonGetFolderDatabase.Text
+                                   );
+  end;
+
+end;
+
+
+procedure TfrmMain.SettingsObjetos;
+begin
+  SettingsTabMapEdits;
+  dbGridQueryResults.DataSource := DsGridQuery;
+end;
+
+
+procedure TfrmMain.SettingsTabMapEdits;
+begin
+  with TabEditMap do
+  begin
+    Add(0, fxEditPort);
+    //Add(1, fxButtonGetFolderDatabase);
+    Add(2, fxEditUser);
+    Add(3, fxEditPassword);
+  end;
+end;
+
+
+procedure TfrmMain.SetEventTabOrderEditsServer;
+begin
+  fxEditPort.OnKeyDown            :=  AdjustsTabOrderEdits;
+  fxEditUser.OnKeyDown            :=  AdjustsTabOrderEdits;
+  fxEditPassword.OnKeyDown        :=  AdjustsTabOrderEdits;
+end;
+
+
+procedure TfrmMain.SetIsServerConnect(const Value: Boolean);
+begin
+  if Value then
+  begin
+    FisServerConnect := Value;
+    TimerServerOnline.Enabled := True;
+  end
+    else
+    begin
+      FisServerConnect := Value;
+      TimerServerOnline.Enabled := False;
+    end;
+end;
+
+procedure TfrmMain.dbGridQueryResultsDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  RowRect : TRect;
+  CellText : String;
+begin
+  RowRect := Rect;
+
+  if odd(dbGridQueryResults.DataSource.DataSet.RecNo) then
+  begin
+    dbGridQueryResults.Canvas.Brush.Color := $00272727;
+    dbGridQueryResults.Canvas.Font.Color := clWhite;
+  end
+    else
+    begin
+      dbGridQueryResults.Canvas.Brush.Color := $00202020;
+      dbGridQueryResults.Canvas.Font.Color := clWhite;
+    end;
+
+  dbGridQueryResults.Canvas.FillRect(RowRect);
+  dbGridQueryResults.DefaultDrawColumnCell(RowRect, DataCol, Column, State);
+  dbGridQueryResults.Canvas.TextRect(RowRect, RowRect.Left + 8, RowRect.Top + 2, Column.Field.DisplayText);
+
+  if gdSelected in State then
+  begin
+    dbGridQueryResults.Canvas.Pen.Width := 1;
+    dbGridQueryResults.Canvas.Pen.Color := clGrayText;
+    dbGridQueryResults.Canvas.Pen.Style := psSolid;
+    dbGridQueryResults.Canvas.Brush.Style := bsClear;
+
+    RowRect.Left := dbGridQueryResults.ClientRect.Left;
+    RowRect.Right := dbGridQueryResults.ClientRect.Right;
+
+    dbGridQueryResults.Canvas.RoundRect(RowRect.Left, RowRect.Top, RowRect.Right, RowRect.Bottom, 20, 20);
+  end;
+
+end;
+
+
+procedure TfrmMain.AppMessage(var Msg: TMsg; var Handled: Boolean);
+begin
+  if (Msg.message = WM_KEYDOWN) then
+  begin
+    if mmQuery.Focused and (GetAsyncKeyState(VK_CONTROL) < 0) then
+    begin
+      if (GetAsyncKeyState(191) < 0) then // tecla "/"
+      begin
+        if mmQuery.SelLength > 0 then
+        begin
+          var StartLine := mmQuery.Perform(EM_LINEFROMCHAR, mmQuery.SelStart, 0);
+          var EndChar := mmQuery.SelStart + mmQuery.SelLength - 1;
+          var EndLine := mmQuery.Perform(EM_LINEFROMCHAR, EndChar, 0);
+
+          for var i := StartLine to EndLine do
+          begin
+            var Line := mmQuery.Lines[i];
+            var Trimmed := TrimLeft(Line);
+            if Copy(Trimmed, 1, 2) = '--' then
+              Delete(Line, Pos('--', Line), 2)
+            else
+              Line := '-- ' + Line;
+            mmQuery.Lines[i] := Line;
+          end;
+        end
+        else
+        begin
+          var LinhaIndex := mmQuery.CaretPos.Y;
+          if (LinhaIndex >= 0) and (LinhaIndex < mmQuery.Lines.Count) then
+          begin
+            var Line := mmQuery.Lines[LinhaIndex];
+            var Trimmed := TrimLeft(Line);
+            if Copy(Trimmed, 1, 2) = '--' then
+              Delete(Line, Pos('--', Line), 2)
+            else
+              Line := '-- ' + Line;
+            mmQuery.Lines[LinhaIndex] := Line;
+          end;
+        end;
+
+        Handled := True;
+        Exit;
+      end;
+    end;
+  end;
+end;
+
+
+procedure TfrmMain.SetTitleForm;
+begin
+
+  with frmMain do
+  begin
+    CustomTitleBar.Control := fxTitleMain;
+    CustomTitleBar.Enabled := True;
+    Caption := 'Server Postgres Embedded';
+  end;
+
+end;
+
+
+procedure TfrmMain.SettingsUIGrid;
+begin
+  TDBGridCustom(dbGridQueryResults).DefaultRowHeight := 40;
+  TDBGridCustom(dbGridQueryResults).ClientHeight := (20 * TDBGridCustom(dbGridQueryResults).RowCount + 30 );
+end;
+
+
+procedure TfrmMain.SetThemeApplication;
+begin
+
+  ThemeManager.DarkThemeMode := FXDarkSetting.ForceDark;
+
+
+  DarkColorBorder := FxColor.Create(60,60,60,255);
+  fxShapeContainer.Drawing.ColorBrush := 2105376;
+  fxShapeContainer.Drawing.ColorPen   := DarkColorBorder;
+
+  frmMain.SmokeEffect := False;
+  frmMain.AlphaBlend  := False;
+
+end;
+
+
+procedure TfrmMain.fxButtonConnectClick(Sender: TObject);
+var
+  AObjectParams : TConnectionParameters;
+begin
+  fxButtonConnect.Enabled := False;
+
+  FrameToast := TfrToastMessage.Create(frmMain);
+  FrameToast.OnSelfDestroy := HandleToastDestroyed(fxButtonConnect);
+
+  if fxSelectVersion.Text = 'Selecione um item' then
+  begin
+    FrameToast.ShowMessageDefault('Selecione uma versão!');
+    Exit;
+  end;
+
+  try
+    AObjectParams := GetValuesParamsConnection(AObjectParams);
+
+    if not ValidateFields(AObjectParams) then
+      Exit;
+
+    if not ValidateFolder(AObjectParams) then
+      Exit;
+
+    InitializeServer(AObjectParams);
+
+    if TServerTabController.IsServerRunning(AObjectParams) then
+    begin
+      FrameToast.ShowMessageSuccess('Servidor iniciado.');
+      isServerConnect := True;
+      DisplayServerOnlineInfoUI(AObjectParams);
+      DisplaySelectedTab(tabOnline.PageIndex, PageControlPrincipal);
+      DisplayServerOnlineListDatabasesUI(AObjectParams);
+    end
+    else
+      FrameToast.ShowMessageError('Servidor não iniciado.');
+
+  finally
+    if Assigned(AObjectParams) then
+      FreeAndNil(AObjectParams);
+  end;
+end;
+
+
+procedure TfrmMain.fxButtonDisconectarServerClick(Sender: TObject);
+begin
+  CloseServer;
+  isServerConnect := False;
+  FChronometerSeconds := 0;
+  DisplaySelectedTab(tabServer.PageIndex, PageControlPrincipal);
+  FrameToast := TfrToastMessage.Create(frmMain);
+  FrameToast.ShowMessageSuccess('Disconectado.');
+end;
+
+procedure TfrmMain.HandleToastDestroyed(Sender: TObject);
+begin
+  fxButtonConnect.Enabled := True;
+
+  if FrameToast = Sender then
+  begin
+    FrameToast := nil;
+  end;
+end;
+
+
+procedure TfrmMain.DisplayServerOnlineListDatabasesUI(AParams : TConnectionParameters);
+var
+  StringListDatabases : TStringList;
+begin
+
+  StringListDatabases := TServerOnlineTabController.GetListDatabases(AParams);
+
+  FillScrollBoxWithFrameDatabaseItem(fxScrollListDatabases, StringListDatabases);
+end;
+
+
+procedure TfrmMain.FillScrollBoxWithFrameDatabaseItem(AScrollBox : FXScrollBox; AList : TStringList);
+var
+  i : integer;
+  frListDatabaseItem : TfrListItemDatabase;
+  PositionY : integer;
+begin
+
+  PositionY := 0;
+
+  for I := 0 to AList.Count -1 do
+  begin
+
+    frListDatabaseItem := TfrListItemDatabase.Create(AScrollBox);
+    with frListDatabaseItem do
+    begin
+      Parent := AScrollBox;
+      Left := 0;
+      Top := PositionY;
+      Name := '';
+
+      PositionY := PositionY + frListDatabaseItem.Height + 6;
+
+      fxTextNameDatabase.Text := AList[i];
+    end;
+
+  end;
+
+end;
+
+
+procedure TfrmMain.DisplayServerOnlineInfoUI(AParams : TConnectionParameters);
+begin
+  fxTextUserServerOnline.Text := AParams.User;
+  fxTextPassServerOnline.Text := AParams.Password;
+  fxTextPortServerOnline.Text := AParams.Port;
+  fxTextPostgresServerOnline.Text := 'PostgreSQL ' + AParams.Version;
+end;
+
+
+procedure TfrmMain.InitializeServer(AParams : TConnectionParameters);
+begin
+  TServerTabController.InitializeServer(AParams);
+end;
+
+
+function TfrmMain.CheckConnectionServer(AParams : TConnectionParameters) : Boolean;
+begin
+  Result := TServerTabController.IsServerRunning(AParams);
+end;
+
+
+function TfrmMain.GetValuesParamsConnection(AObject : TConnectionParameters) : TConnectionParameters;
+begin
+  AObject := TConnectionParameters.Create;
+  with AObject do
+  begin
+    PathData := fxButtonGetFolderDatabase.Text;
+    User     := fxEditUser.Text;
+    Password := fxEditPassword.Text;
+    Port     := fxEditPort.Text;
+    if not (fxSelectVersion.Text.Contains('Selecione')) then
+      Version  := fxSelectVersion.Text;
+
+    PathBin := IncludeTrailingPathDelimiter(
+              StringReplace(ExtractFilePath(ParamStr(0)) + TServerTabController.GetPathBin(AObject.Version.ToInteger), '/', '\', [rfReplaceAll])
+            );
+  end;
+
+  Result := AObject;
+end;
+
+
+function TfrmMain.ValidateFields(AParams : TConnectionParameters): Boolean;
+var
+  MessageErrorToast : String;
+begin
+  Result := TServerTabController.ValidateFields(AParams,
+                                                  MessageErrorToast);
+  if not Result then
+  begin
+    if not Assigned(FrameToast) then
+      FrameToast := TfrToastMessage.Create(frmMain);
+    FrameToast.ShowMessageError(MessageErrorToast);
+  end;
+end;
+
+
+function TfrmMain.ValidateFolder(AParams : TConnectionParameters) : Boolean;
+var
+  MessageErrorToast : String;
+begin
+
+  Result := TServerTabController.ValidateDataFolder(AParams.PathData,
+                                                    AParams.Version,
+                                                    MessageErrorToast);
+
+  if not Result then
+  begin
+    if not Assigned(FrameToast) then
+      FrameToast := TfrToastMessage.Create(frmMain);
+    FrameToast.ShowMessageError(MessageErrorToast);
+  end;
+end;
+
+
+procedure TfrmMain.fxButtonGetFolderDatabaseClick(Sender: TObject);
+var
+  OpenDialog : TFileOpenDialog;
+begin
+  OpenDialog := TFileOpenDialog.Create(Self);
+  try
+    with OpenDialog do
+    begin
+      Title := 'Selecione a pasta DATA do Postgres';
+      Options := [fdoPickFolders, fdoPathMustExist];
+      FileName := '';
+    end;
+
+    if OpenDialog.Execute then
+      GetPathFolderDataProvidedByUser(OpenDialog.FileName);
+
+  finally
+    OpenDialog.Free;
+  end;
+end;
+
+
+procedure TfrmMain.GetPathFolderDataProvidedByUser(FDataPath : TFileName);
+begin
+  fxButtonGetFolderDatabase.Text := FDataPath;
+end;
+
+
+procedure TfrmMain.fxButtonResetClick(Sender: TObject);
+begin
+  ResetInputs;
+end;
+
+
+procedure TfrmMain.AdjustsTabOrderEdits(Sender : TObject; var Key: Word; Shift : TShiftState);
+var
+  CurrentEdit: FXEdit;
+  CurrentIndex, NextIndex : Integer;
+  NextEdit : FXEdit;
+begin
+  if Key = VK_TAB then
+  begin
+    Key := 0;
+
+    CurrentEdit := FXEdit(Sender);
+
+    for CurrentIndex in TabEditMap.Keys do
+    begin
+
+      if TabEditMap[CurrentIndex] = CurrentEdit then
+      begin
+        NextIndex := CurrentIndex + 1;
+
+        if TabEditMap.TryGetValue(NextIndex, NextEdit) then
+        begin
+          NextEdit.SetFocus;
+        end
+          else
+          begin
+            TabEditMap[0].SetFocus;
+          end;
+
+        Break;
+      end;
+    end;
+
+  end;
+end;
+
+
+procedure TfrmMain.ResetInputs;
+begin
+  fxEditPort.Text := '';
+  fxEditUser.Text := '';
+  fxEditPassword.Text := '';
+  fxButtonGetFolderDatabase.Text := '';
+end;
+
+
+procedure TfrmMain.fxPanelShowQueryCardResize(Sender: TObject);
+begin
+  fxShapeShowQueryCard.Drawing.ColorBrush := 2105376;
+  fxShapeShowQueryCard.Drawing.ColorPen := DarkColorBorder;
+
+  fxShapeListQueries.Drawing.ColorBrush := 2105376;
+  fxShapeListQueries.Drawing.ColorPen := DarkColorBorder;
+end;
+
+
+procedure TfrmMain.FillItemsPopupVersions;
+var
+  DictVersoes : TDictionary<String, Integer>;
+  PopUpItem : FXPopupItem;
+  Versao : String;
+begin
+  PopUpItem := FXPopupItem.Create(nil);
+  fxPopupVersionsPostgres.Items.Clear(true);
+  try
+    DictVersoes := TServerTabController.GetVersionsPostgres;
+    for Versao in DictVersoes.Keys do
+    begin
+      PopUpItem.Text := StringReplace(Versao, 'Versao', '', [rfIgnoreCase]);   //aqui vem como Versao13
+      fxPopupVersionsPostgres.Items.Add(PopUpItem);
+    end;
+  except
+    raise Exception.Create('Erro ao preencher o dropdown das versões!');
+  end;
+end;
+
+
+procedure TfrmMain.fxPopupVersionsPostgresBeforePopup(Sender: TObject; var CanPopup: Boolean; Point: TPoint);
+begin
+  RemoveLeadingIconsPopUp(fxPopupVersionsPostgres);
+  ClearShortCutPopUp(fxPopupVersionsPostgres);
+end;
+
+
+procedure TfrmMain.fxPopupVersionsPostgresItemClick(Sender: TObject;
+  Item: FXPopupComponent; Index: Integer);
+begin
+  fxSelectVersion.Text := fxPopupVersionsPostgres.Items.Item[Index].Text;
+end;
+
+
+procedure TfrmMain.RemoveLeadingIconsPopUp(FPopup : FxPopUpMenu);
+var
+  i : integer;
+begin
+  for i := 0 to FPopup.Items.Count -1 do
+  begin
+    FPopup.Items[i].Image.Enabled := False;
+  end;
+end;
+
+
+procedure TfrmMain.ClearShortCutPopUp(FPopup : FxPopUpMenu);
+var
+  i : Integer;
+begin
+  for I := 0 to FPopup.Items.Count -1 do
+  begin
+    FPopup.Items[i].Shortcut := '';
+  end;
+end;
+
+
+procedure TfrmMain.fxSelectorPrincipalChange(Sender: TObject);
+begin
+  if (isServerConnect) and (fxSelectorPrincipal.SelectedItem = 0) then
+  begin
+    DisplaySelectedTab(tabOnline.PageIndex, PageControlPrincipal);
+    Exit;
+  end;
+
+  DisplaySelectedTab(fxSelectorPrincipal.SelectedItem, PageControlPrincipal);
+end;
+
+
+procedure TfrmMain.fxSelectorSQLChange(Sender: TObject);
+begin
+  DisplaySelectedTab(fxSelectorSQL.SelectedItem, PageControlSQL);
+end;
+
+
+procedure TfrmMain.mmQueryChange(Sender: TObject);
+begin
+  UpdateListboxLinesQuery;
+end;
+
+
+procedure TfrmMain.mmQueryKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_TAB then
+  begin
+    mmQuery.SelText := #9;
+    Key := 0;
+  end;
+end;
+
+
+procedure TfrmMain.mmQueryKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_RETURN then
+    UpdateListboxLinesQuery;
+end;
+
+
+procedure TfrmMain.PageControlPrincipalResize(Sender: TObject);
+begin
+  fxShapeServerConnect.Drawing.ColorBrush := 2105376;
+  fxShapeServerConnect.Drawing.ColorPen := DarkColorBorder;
+end;
+
+
+procedure TfrmMain.tabQueryHistoryResize(Sender: TObject);
+begin
+  fxPanelListQueries.Width := fxPanelQueryHistory.Width div 2;
+  fxPanelShowQuery.Width   := fxPanelQueryHistory.Width div 2;
+end;
+
+
+procedure TfrmMain.tabQueryHistoryShow(Sender: TObject);
+var
+  AFrameItem : TfrListItemSQL;
+  AStatus : TStatusQuery;
+
+  //AFrameToast : TfrToastMessage;
+begin
+  AFrameItem := TfrListItemSQL.Create(self);
+  with AFrameItem do
+  begin
+    //fxTextTitleSQL.Text := 'TitleSQL';
+    //fxTextHour.Text     := '03/05/2025';
+
+    Parent := fxScrollBoxListQueries;
+    Align := TAlign.alTop;
+    StatusQuery := TStatusQuery.stSuccess;
+  end;
+
+  FrameToast := TfrToastMessage.Create(frmMain);
+  with FrameToast do
+  begin
+    Visible := True;
+    fxTextToastMessage.Text := 'This is message with width!';
+    AnimationToast;
+  end;
+end;
+
+
+procedure TfrmMain.tabSQLShow(Sender: TObject);
+begin
+  DisplaySelectedTab(fxSelectorSQL.SelectedItem, PageControlSQL);
+end;
+
+
+procedure TfrmMain.TimerServerOnlineTimer(Sender: TObject);
+var
+  Hour, Minutes, Seconds: Word;
+begin
+  Inc(FChronometerSeconds);
+
+  Hour := FChronometerSeconds div 3600;
+  Minutes := (FChronometerSeconds mod 3600) div 60;
+  Seconds := FChronometerSeconds mod 60;
+
+  fxTextTimerServerOnline.Text := Format('%.2d:%.2d:%.2d', [Hour, Minutes, Seconds]);
+
+end;
+
+procedure TfrmMain.DisplaySelectedTab(FIndex : Integer; FPageControl : TPageControl);
+begin
+  FPageControl.ActivePageIndex := FIndex;
+end;
+
+
+procedure TfrmMain.UpdateListboxLinesQuery;
+var
+  i: Integer;
+begin
+  lbxCountLinesQuery.Items.BeginUpdate;
+  try
+    lbxCountLinesQuery.Items.Clear;
+    for i := 0 to mmQuery.Lines.Count - 1 do
+      lbxCountLinesQuery.Items.Add( '  ' + (i+1).ToString);
+  finally
+    lbxCountLinesQuery.Items.EndUpdate;
+  end;
+end;
+
+
+procedure TfrmMain.DisableTabHeader(FPageControl : TPageControl);
+var
+  FPage : Integer;
+begin
+
+  for FPage := 0 to FPageControl.PageCount -1 do
+  begin
+    FPageControl.Pages[FPage].TabVisible := False;
+  end;
+
+end;
+
+
+procedure TfrmMain.DisplayTabIndexDefaultPageControl;
+begin
+  PageControlPrincipal.ActivePageIndex := 0;
+end;
+
+
+
+end.

@@ -1,0 +1,80 @@
+unit uFrListItemSQL;
+
+interface
+
+uses
+  uTypes,
+
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, CFX.Controls, CFX.TextBox,
+  CFX.Button, Vcl.ExtCtrls, CFX.Panels, CFX.ButtonDesign;
+
+type
+  TfrListItemSQL = class(TFrame)
+    fxTextTitleSQL: FXTextBox;
+    fxTextHour: FXTextBox;
+    fxPanelItemContainer: FXPanel;
+    FXPanel2: FXPanel;
+    procedure fxPanelItemContainerMouseEnter(Sender: TObject);
+    procedure fxPanelItemContainerMouseLeave(Sender: TObject);
+  private
+    FStatusQuery: TStatusQuery;
+
+    procedure SetStatusQuery(const Value: TStatusQuery);
+
+    procedure SetItemColorSuccess;
+    procedure SetItemColorFailed;
+  public
+    property StatusQuery : TStatusQuery read FStatusQuery write SetStatusQuery;
+
+  end;
+
+implementation
+
+var
+  iFrListItemSQL : TfrListItemSQL;
+
+{$R *.dfm}
+
+{ TfrListItemSQL }
+
+procedure TfrListItemSQL.SetItemColorSuccess;
+begin
+  Self.Color := $00DDE7D1;
+  Self.fxTextTitleSQL.CustomColors.Accent := $007AF567;
+  Self.fxTextTitleSQL.UseAccentAsForeground := True;
+end;
+
+procedure TfrListItemSQL.fxPanelItemContainerMouseEnter(Sender: TObject);
+begin
+  fxPanelItemContainer.Color := $001B1B1A;
+  fxTextTitleSQL.CustomColors.DarkBackGround := $001B1B1A;
+  fxTextHour.CustomColors.DarkBackGround := $001B1B1A;
+end;
+
+procedure TfrListItemSQL.fxPanelItemContainerMouseLeave(Sender: TObject);
+begin
+  fxPanelItemContainer.Color := $002A2A2A;
+  fxTextTitleSQL.CustomColors.DarkBackGround := $002A2A2A;
+  fxTextHour.CustomColors.DarkBackGround := $002A2A2A;
+end;
+
+procedure TfrListItemSQL.SetItemColorFailed;
+begin
+  Self.Color := $00DAD7F8;
+  Self.fxTextTitleSQL.CustomColors.Accent := $003F3FE9;
+  Self.fxTextTitleSQL.UseAccentAsForeground := True;
+end;
+
+procedure TfrListItemSQL.SetStatusQuery(const Value: TStatusQuery);
+begin
+  FStatusQuery := Value;
+  case FStatusQuery of
+    stSuccess:
+      SetItemColorSuccess;
+    stFailed:
+      SetItemColorFailed;
+  end;
+end;
+
+end.

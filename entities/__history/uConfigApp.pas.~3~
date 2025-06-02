@@ -1,0 +1,17 @@
+unit uConfigApp;
+
+interface
+
+type
+  TConfigApp = class
+    private
+      FExecutablePath: String;
+      FComputerName: String;
+    public
+      property ExecutablePath : String read FExecutablePath write FExecutablePath;
+      property ComputerName : String   read FComputerName   write FComputerName;
+  end;
+
+implementation
+
+end.

@@ -1,0 +1,182 @@
+object frToastMessage: TfrToastMessage
+  AlignWithMargins = True
+  Left = 0
+  Top = 0
+  Width = 200
+  Height = 50
+  Margins.Left = 0
+  Margins.Top = 0
+  Margins.Right = 0
+  Margins.Bottom = 0
+  Anchors = [akLeft, akTop, akRight, akBottom]
+  AutoSize = True
+  BiDiMode = bdLeftToRight
+  Color = 2105376
+  ParentBackground = False
+  ParentBiDiMode = False
+  ParentColor = False
+  TabOrder = 0
+  OnResize = FrameResize
+  object fxPanelToastContainer: FXPanel
+    AlignWithMargins = True
+    Left = 0
+    Top = 0
+    Width = 200
+    Height = 50
+    Margins.Left = 0
+    Margins.Top = 0
+    Margins.Right = 0
+    Margins.Bottom = 0
+    Align = alClient
+    AutoSize = True
+    BevelOuter = bvNone
+    Color = 15987699
+    FullRepaint = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = 2105376
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    ParentBackground = False
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 0
+    CustomColors.Enabled = True
+    CustomColors.Accent = 13924352
+    CustomColors.LightBackGround = 15987699
+    CustomColors.LightForeGround = 2105376
+    CustomColors.DarkBackGround = 2105376
+    CustomColors.DarkForeGround = clWhite
+    CustomColors.LightBackGroundInterior = 16514043
+    CustomColors.DarkBackGroundInterior = 2105376
+    AccentLineWidth = 8
+    object fxShapeToastMessage: FXShapeRoundedSquare
+      Left = 0
+      Top = 0
+      Width = 200
+      Height = 50
+      Margins.Left = 0
+      Margins.Top = 0
+      Margins.Right = 0
+      Margins.Bottom = 0
+      Transparent = False
+      Size.X = 200
+      Size.Y = 50
+      Position.X = 0
+      Position.Y = 0
+      CustomColors.Enabled = True
+      CustomColors.Accent = 13924352
+      CustomColors.LightBackGround = 2829099
+      CustomColors.LightForeGround = 2829099
+      CustomColors.DarkBackGround = 2829099
+      CustomColors.DarkForeGround = 2829099
+      Drawing.DrawBrush = False
+      Drawing.ColorPen = -5658199
+      Drawing.ColorBrush = 2829099
+      Drawing.PenSize = 1.000000000000000000
+      Align = alClient
+      TabOrder = 0
+      CornerRadius.Around = 12.000000000000000000
+    end
+    object fxPanelToastContent: FXPanel
+      AlignWithMargins = True
+      Left = 6
+      Top = 6
+      Width = 188
+      Height = 38
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Align = alClient
+      AutoSize = True
+      BevelOuter = bvNone
+      Color = 2829099
+      FullRepaint = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 2829099
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentBackground = False
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 1
+      CustomColors.Enabled = True
+      CustomColors.Accent = 13924352
+      CustomColors.LightBackGround = 2829099
+      CustomColors.LightForeGround = 2829099
+      CustomColors.DarkBackGround = 2829099
+      CustomColors.DarkForeGround = 2829099
+      CustomColors.LightBackGroundInterior = 2829099
+      CustomColors.DarkBackGroundInterior = 2829099
+      AccentLineWidth = 8
+      object imgToastCloseMessage: TImage
+        AlignWithMargins = True
+        Left = 157
+        Top = 10
+        Width = 21
+        Height = 18
+        Cursor = crHandPoint
+        Margins.Left = 10
+        Margins.Top = 10
+        Margins.Right = 10
+        Margins.Bottom = 10
+        Align = alRight
+        Center = True
+        Picture.Data = {
+          0954506E67496D61676589504E470D0A1A0A0000000D49484452000000140000
+          001408060000008D891D0D000000097048597300000B1300000B1301009A9C18
+          000001654944415478DABD94CF4AC34010C6F307EC293E43CF6AF5249E452489
+          39E7091454444AABAF2115A9E8419F20E798448A77918048F5DC738E26972A4B
+          FC567765B38D9048DB816136B399DF7E331BA22A5336756E40DBB65B087BF02D
+          7893A547799E0F745DBFF17D7F58096859564355D51E0AF711B5B222EC11846B
+          C330BA9EE77DFC09A4308400A0CD2AED01FC00A82D4265E0156007756606683F
+          0CC3E309209D19369F8536C7F017F8BAC47882AFC21BBC7DF85A1445AF0520D4
+          9D03D6160B8320D8C04167587758AE87DC09728FD24134DF9515D2139624351C
+          40A18AB0EE882F41E1106DB76485EF5068948CE91BCA0E9D8031600AE0E26C81
+          B36879BA97E238CE0A21847E367ADDCF863E43E15B01C854F6013C52EAD905D4
+          FD765600BAAEBB9065D99DF2F343A86283244976E238FE2C0572689AA6746E87
+          42FBF2AD12EC5D02762AC24A81DC4CD35CD6346D17C5DB286E32D008E11E7ECB
+          6726DBFC7EB0FFB52F15D2D115AFA1ACD30000000049454E44AE426082}
+        OnClick = imgToastCloseMessageClick
+        ExplicitLeft = 144
+        ExplicitTop = 0
+        ExplicitHeight = 42
+      end
+      object fxTextToastMessage: FXTextBox
+        Left = 12
+        Top = 0
+        Width = 135
+        Height = 38
+        Margins.Left = 12
+        Margins.Top = 0
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Transparent = False
+        Size.X = 135
+        Size.Y = 38
+        Position.X = 12
+        Position.Y = 0
+        CustomColors.Enabled = True
+        CustomColors.Accent = clWhite
+        CustomColors.LightBackGround = 2829099
+        CustomColors.LightForeGround = 2829099
+        CustomColors.DarkBackGround = 2829099
+        CustomColors.DarkForeGround = 2829099
+        Align = alClient
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = 22
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        TabOrder = 0
+        Text = 'Message!'
+        UseAccentAsForeground = True
+        AutoSize = True
+        Elipsis = False
+        InnerMargin = 0
+      end
+    end
+  end
+end

@@ -1,0 +1,27 @@
+unit uParametrosConexao;
+
+interface
+
+type
+  TParametrosConexao = class {Parametros de conexão base}
+    private
+      FPathBin: String;
+      FPathBackup: String;
+      FSenha: String;
+      FDatabase: String;
+      FPorta: String;
+      FUsuario: String;
+      FCharacterSet: String;
+    public
+      property Database     : String read FDatabase     write FDatabase;
+      property User         : String read FUsuario      write FUsuario;
+      property Password     : String read FSenha        write FSenha;
+      property Port         : String read FPorta        write FPorta;
+      property CharacterSet : String read FCharacterSet write FCharacterSet;
+      property PathBin      : String read FPathBin      write FPathBin;
+      property PathBackup   : String read FPathBackup   write FPathBackup;
+  end;
+
+implementation
+
+end.

@@ -1,0 +1,21 @@
+unit uParametrosAppConexao;
+
+interface
+
+type
+  TParametrosAppConexao = class {conexão sqlite - Conexão da aplicação}
+    private
+      FVersaoPostgres: String;
+      FPathBinPostgres: String;
+      FUsuarioDefault: String;
+      FIdVersaoPostgres: Integer;
+    public
+      property IdVersaoPostgres : Integer read FIdVersaoPostgres write FIdVersaoPostgres;
+      property VersaoPostgres   : String  read FVersaoPostgres   write FVersaoPostgres;
+      property UsuarioDefault   : String  read FUsuarioDefault   write FUsuarioDefault;
+      property PathBinPostgres  : String  read FPathBinPostgres  write FPathBinPostgres;
+  end;
+
+implementation
+
+end.

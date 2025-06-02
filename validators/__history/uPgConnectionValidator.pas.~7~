@@ -1,0 +1,66 @@
+unit uPgConnectionValidator;
+
+interface
+
+uses
+  uConnectionParameters,
+  SysUtils, Classes, Dialogs;
+
+type
+  TValidationPair = record
+    FieldName: string;
+    FieldValue: string;
+  end;
+
+  TPgConnectionValidator = class
+    private
+    public
+      class function ValidateConnectionParameters(
+      AParams : TConnectionParameters;
+       out AMessageError : String
+    ): Boolean;
+  end;
+
+implementation
+
+{ TPgConnectionValidator }
+
+class function TPgConnectionValidator.ValidateConnectionParameters(
+  AParams : TConnectionParameters; out AMessageError : String): Boolean;
+var
+  ValidationFields: array of TValidationPair;
+  i: Integer;
+begin
+  Result := True;
+
+  SetLength(ValidationFields, 5);
+
+  ValidationFields[0].FieldName := 'da Pasta DATA';
+  ValidationFields[0].FieldValue := AParams.PathData;
+
+  ValidationFields[1].FieldName := 'Usuário';
+  ValidationFields[1].FieldValue := AParams.User;
+
+  ValidationFields[2].FieldName := 'Senha';
+  ValidationFields[2].FieldValue := AParams.Password;
+
+  ValidationFields[3].FieldName := 'Porta';
+  ValidationFields[3].FieldValue := AParams.Port;
+
+  ValidationFields[4].FieldName := 'Versão';
+  ValidationFields[4].FieldValue := AParams.Version;
+
+  for i := Low(ValidationFields) to High(ValidationFields) do
+  begin
+    if Trim(ValidationFields[i].FieldValue) = '' then
+    begin
+      AMessageError := (Format('O campo "%s" não pode estar vazio(a).', [ValidationFields[i].FieldName]));
+      Result := False;
+      Exit;
+    end;
+  end;
+
+end;
+
+end.
+

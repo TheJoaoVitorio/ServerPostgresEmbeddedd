@@ -1,0 +1,21 @@
+unit uParametrosUsuarioConexao;
+
+interface
+
+type
+  TParametrosUsuarioConexao = class
+    private
+      FPathPastaData: String;
+      FPathBackup: String;
+      FPorta: Integer;
+      FNomeBanco: String;
+    public
+      property NomeBanco     : String  read FNomeBanco      write FNomeBanco;
+      property PathPastaData : String  read FPathPastaData  write FPathPastaData;
+      property Porta         : Integer read FPorta          write FPorta;
+      property PathBackup    : String  read FPathBackup     write FPathBackup;
+  end;
+
+implementation
+
+end.

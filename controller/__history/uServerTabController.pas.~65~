@@ -1,0 +1,117 @@
+unit uServerTabController;
+
+interface
+
+uses
+  uPostgresVersion,
+  uConnectionParameters,
+
+  uPgConnectionValidator,
+  uPgDataFolderValidator,
+
+  uShellController,
+
+  System.Generics.Collections,
+  System.Classes, Winapi.Windows,
+  System.SysUtils;
+
+type
+  TServerTabController = class
+    private
+
+    public
+
+      class function GetVersionsPostgres : TDictionary<string, Integer>;
+
+      class function ValidateFields(AParams : TConnectionParameters; out AMessageError: String): Boolean;
+
+      class function ValidateDataFolder(APathData: String;
+                                        AVersion : String;
+                                        out AMessageError: String): Boolean;
+
+      class procedure InitializeServer(AParams : TConnectionParameters);
+  end;
+
+implementation
+
+{ TServerTabController }
+
+class function TServerTabController.GetVersionsPostgres: TDictionary<string, Integer>;
+var
+  List : TObjectList<TPostgresVersion>;
+  Dict : TDictionary<String, Integer>;
+  Item : TPostgresVersion;
+begin
+  Dict := TDictionary<String, Integer>.Create;
+
+  List := TPostgresVersion.GetAllVersions;
+  try
+    for Item in List do
+      Dict.AddOrSetValue('Versao' + IntToStr(Item.Version), Item.Version);
+  finally
+    List.Free;
+  end;
+
+  Result := Dict;
+end;
+
+
+class function TServerTabController.ValidateFields(AParams : TConnectionParameters; out AMessageError : String) : Boolean;
+begin
+  Result := TPgConnectionValidator.ValidateConnectionParameters(AParams, AMessageError);
+end;
+
+
+class function TServerTabController.ValidateDataFolder(APathData: string; AVersion : String; out AMessageError: string): Boolean;
+var
+  ValidationResult : TPgDataFolderValidatorTypes;
+  VersionPG : String;
+begin
+  AMessageError:= '';
+
+  if not TPgDataFolderValidator.IsPostgresDataFolder(APathData,ValidationResult,VersionPG) then
+  begin
+    case ValidationResult of
+      pgDataPathNotFound:
+        AMessageError := 'O caminho especificado não foi encontrado.';
+      pgDataMissingBaseSubDir:
+        AMessageError := 'A pasta de dados do PostgreSQL deve conter o subdiretório "base".';
+      pgDataMissingGlobalSubDir:
+        AMessageError := 'A pasta de dados do PostgreSQL deve conter o subdiretório "global".';
+      pgDataMissingPgWalSubDir:
+        AMessageError := 'A pasta de dados do PostgreSQL deve conter o subdiretório "pg_wal" ou "pg_xlog".';
+      pgDataMissingPostmasterPid:
+        AMessageError := 'Aviso: A pasta de dados do PostgreSQL não contém "postmaster.pid" ou "postmaster.opts".';
+      pgDataMissingPgVersionFile:
+        AMessageError := 'O arquivo "PG_VERSION" não foi encontrado na pasta selecionada.';
+      pgDataInvalidPgVersionContent:
+        AMessageError := 'O conteúdo do arquivo "PG_VERSION" é inválido ou não pôde ser lido.';
+      else
+        raise Exception.Create('Erro ao validar a pasta DATA do postgres');
+
+      Result := False;
+    end;
+
+  end;
+
+
+  if not (VersionPG = AVersion) then
+  begin
+    AMessageError := 'Selecione uma versão ou a pasta válida!';
+    Result := False;
+  end;
+
+  if ValidationResult = pgDataValid then
+    Result := True;
+
+end;
+
+
+class procedure TServerTabController.InitializeServer(AParams : TConnectionParameters);
+begin
+
+end;
+
+
+
+end.

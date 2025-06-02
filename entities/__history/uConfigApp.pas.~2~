@@ -1,0 +1,15 @@
+unit uConfigApp;
+
+interface
+
+type
+  TConfigApp = class
+    private
+      FExecutablePath: String;
+    public
+      property ExecutablePath : String read FExecutablePath write FExecutablePath;
+  end;
+
+implementation
+
+end.

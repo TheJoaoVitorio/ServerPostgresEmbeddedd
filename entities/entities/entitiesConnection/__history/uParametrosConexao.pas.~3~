@@ -1,0 +1,25 @@
+unit uParametrosConexao;
+
+interface
+
+type
+  TParametrosConexao = class {Parametros de conexão com o postgres}
+    private
+      FPathBin: String;
+      FPathBackup: String;
+      FSenha: String;
+      FDatabase: String;
+      FPorta: String;
+      FUsuario: String;
+    public
+      property Database   : String read FDatabase   write FDatabase;
+      property Usuario    : String read FUsuario    write FUsuario;
+      property Senha      : String read FSenha      write FSenha;
+      property Porta      : String read FPorta      write FPorta;
+      property PathBin    : String read FPathBin    write FPathBin;
+      property PathBackup : String read FPathBackup write FPathBackup;
+  end;
+
+implementation
+
+end.

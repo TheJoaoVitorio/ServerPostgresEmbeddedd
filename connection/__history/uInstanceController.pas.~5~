@@ -1,0 +1,63 @@
+unit uInstanceController;
+
+interface
+
+uses
+  uConnection;
+
+type
+  TInstanceController = class
+    private
+      pgConnection: TConnection;
+
+      class var FInstance : TInstanceController;
+    public
+      class function GetInstance : TInstanceController;
+      class procedure RealeseInstance; static;
+
+      constructor Create;
+      destructor Destroy; override;
+
+      property Connection : TConnection read pgConnection write pgConnection;
+  end;
+
+implementation
+
+{ TInstanceController }
+
+constructor TInstanceController.Create;
+begin
+  pgConnection := TConnection.Create;
+end;
+
+destructor TInstanceController.Destroy;
+begin
+  pgConnection.Free;
+  inherited;
+end;
+
+class function TInstanceController.GetInstance: TInstanceController;
+begin
+  if not Assigned(Self.FInstance) then
+    Self.FInstance := TInstanceController.Create;
+
+  Result := Self.FInstance;
+end;
+
+class procedure TInstanceController.RealeseInstance;
+begin
+  if FInstance <> nil then
+  begin
+    FInstance.Free;
+    FInstance := nil;
+  end;
+
+end;
+
+
+initialization
+
+finalization
+  TInstanceController.RealeseInstance;
+
+end.

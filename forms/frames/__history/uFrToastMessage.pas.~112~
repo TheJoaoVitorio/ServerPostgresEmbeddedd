@@ -1,0 +1,192 @@
+unit uFrToastMessage;
+
+interface
+
+uses
+  CFX.Types,
+
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, CFX.TextBox, CFX.Controls,
+  CFX.Shapes, Vcl.ExtCtrls, CFX.Panels, Vcl.Imaging.pngimage, CFX.Effects;
+
+type
+  TTypeMessage = (tpDefault, tpInfo, tpSuccess, tpError);
+
+  TfrToastMessage = class(TFrame)
+    fxPanelToastContainer: FXPanel;
+    fxShapeToastMessage: FXShapeRoundedSquare;
+    fxPanelToastContent: FXPanel;
+    fxTextToastMessage: FXTextBox;
+    imgToastCloseMessage: TImage;
+    procedure imgToastCloseMessageClick(Sender: TObject);
+    procedure FrameResize(Sender: TObject);
+  private
+    ToastTThread: TThread;
+    MaxTop: Integer;
+    MinTop: Integer;
+    PositionTop: Integer;
+    StopThread: Boolean;
+    FTpMessageError: Boolean;
+
+    procedure ActionToast;
+    procedure SetStyleError(const Value: Boolean);
+    procedure SetStyleSuccess(const Value: Boolean);
+
+
+  public
+    constructor Create(const Parent: TWinControl); reintroduce;
+    destructor Destroy; override;
+
+    procedure SetTitle(const FTitle : String);
+
+    procedure ShowMessageDefault(const Msg: String);
+    procedure ShowMessageError(const Msg: String);
+    procedure ShowMessageSuccess(const Msg: String);
+
+    procedure AnimationToast;
+
+
+    property tpMessageError : Boolean write SetStyleError;
+    property tpMessageSuccess : Boolean write SetStyleSuccess;
+  end;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrToastMessage.AnimationToast;
+begin
+  Self.Visible := True;
+  ActionToast;
+end;
+
+constructor TfrToastMessage.Create(const Parent: TWinControl);
+begin
+  inherited Create(Parent);
+
+  PositionTop := 30;
+  MaxTop := Parent.Height - 80;
+  MinTop := Parent.Height;
+  StopThread := False;
+
+  fxTextToastMessage.WordWrap := true;
+
+  //Self.Width := fxTextToastMessage.Width + 170;
+  Self.Width := fxTextToastMessage.Width * 3;
+  Self.Left := (Parent.ClientWidth - Self.Width) - 50;
+  Self.Top := PositionTop;
+  Self.Align := alNone;
+  Self.Visible := False;
+
+  fxShapeToastMessage.Drawing.ColorPen := FxColor.Create(60, 60, 60, 255);
+
+  Parent.InsertControl(Self);
+end;
+
+destructor TfrToastMessage.Destroy;
+begin
+  StopThread := True;
+  inherited;
+end;
+
+procedure TfrToastMessage.FrameResize(Sender: TObject);
+begin
+  //fxShapeToastMessage.Drawing.ColorPen := FxColor.Create(60, 60, 60, 255);
+end;
+
+procedure TfrToastMessage.imgToastCloseMessageClick(Sender: TObject);
+begin
+  Self.Free;
+end;
+
+procedure TfrToastMessage.SetTitle(const FTitle: String);
+begin
+  fxTextToastMessage.Text := FTitle;
+end;
+
+procedure TfrToastMessage.ActionToast;
+begin
+  ToastTThread := TThread.CreateAnonymousThread(
+    procedure
+    begin
+      if StopThread then Exit;
+
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          Self.Top := MinTop;
+        end);
+
+
+      while (Self.Top > MaxTop) and (not StopThread) do
+      begin
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            Self.Top := Self.Top - 1;
+          end);
+      end;
+
+
+      Sleep(4000);
+
+      //(fechando)
+      while (Self.Top < MinTop) and (not StopThread) do
+      begin
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            Self.Top := Self.Top + 1;
+          end);
+      end;
+
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          if not StopThread then
+            Free;
+        end);
+    end);
+
+  ToastTThread.FreeOnTerminate := True;
+  ToastTThread.Start;
+end;
+
+procedure TfrToastMessage.ShowMessageDefault(const Msg : String);
+begin
+  SetTitle(Msg);
+  AnimationToast;
+end;
+
+procedure TfrToastMessage.ShowMessageSuccess(const Msg : String);
+begin
+  tpMessageSuccess := True;
+  SetTitle(Msg);
+  AnimationToast;
+end;
+
+procedure TfrToastMessage.SetStyleSuccess(const Value: Boolean);
+begin
+  if Value then
+  begin
+    fxShapeToastMessage.Drawing.ColorPen := FXColors.Lime;
+  end;
+end;
+
+procedure TfrToastMessage.ShowMessageError(const Msg : String);
+begin
+  tpMessageError := True;
+  SetTitle(Msg);
+  AnimationToast;
+end;
+
+procedure TfrToastMessage.SetStyleError(const Value: Boolean);
+begin
+  if Value then
+  begin
+    fxShapeToastMessage.Drawing.ColorPen := FXColors.Crimson;
+  end;
+end;
+
+end.
+

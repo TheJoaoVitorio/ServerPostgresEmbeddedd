@@ -23,7 +23,9 @@ type
     public
       class function IsServerRunning(AParams: TConnectionParameters): Boolean;
 
-      class function GetVersionsPostgres : TDictionary<string, Integer>;
+      class function GetPathBin(AVersion: String): String;
+
+      class function GetVersionsPostgres : TDictionary<string, String>;
 
       class function ValidateFields(AParams : TConnectionParameters; out AMessageError: String): Boolean;
 
@@ -32,29 +34,36 @@ type
                                         out AMessageError: String): Boolean;
 
       class procedure InitializeServer(AParams : TConnectionParameters);
+      class procedure StopServer(APathBin, APathData: string);
   end;
 
 implementation
 
 { TServerTabController }
 
-class function TServerTabController.GetVersionsPostgres: TDictionary<string, Integer>;
+class function TServerTabController.GetVersionsPostgres: TDictionary<string, String>;
 var
   List : TObjectList<TPostgresVersion>;
-  Dict : TDictionary<String, Integer>;
+  Dict : TDictionary<String, String>;
   Item : TPostgresVersion;
 begin
-  Dict := TDictionary<String, Integer>.Create;
+  Dict := TDictionary<String, String>.Create;
 
   List := TPostgresVersion.GetAllVersions;
   try
     for Item in List do
-      Dict.AddOrSetValue('Versao' + IntToStr(Item.Version), Item.Version);
+      Dict.AddOrSetValue('Versao' + Item.Version, Item.Version);
   finally
     List.Free;
   end;
 
   Result := Dict;
+end;
+
+
+class function TServerTabController.GetPathBin(AVersion : String) : String;
+begin
+  Result := TPostgresVersion.FetchBinaryPathByVersion(AVersion);
 end;
 
 
@@ -69,6 +78,7 @@ var
   ValidationResult : TPgDataFolderValidatorTypes;
   VersionPG : String;
 begin
+  Result := False;
   AMessageError:= '';
 
   if not TPgDataFolderValidator.IsPostgresDataFolder(APathData,ValidationResult,VersionPG) then
@@ -84,6 +94,8 @@ begin
         AMessageError := 'A pasta de dados do PostgreSQL deve conter o subdiretório "pg_wal" ou "pg_xlog".';
       pgDataMissingPostmasterPid:
         AMessageError := 'Aviso: A pasta de dados do PostgreSQL não contém "postmaster.pid" ou "postmaster.opts".';
+      pgDataIncompatibleVersion:
+        AMessageError := 'Selecione uma versão ou a pasta válida!';
       pgDataMissingPgVersionFile:
         AMessageError := 'O arquivo "PG_VERSION" não foi encontrado na pasta selecionada.';
       pgDataInvalidPgVersionContent:
@@ -97,12 +109,6 @@ begin
   end;
 
 
-  if not (VersionPG = AVersion) then
-  begin
-    AMessageError := 'Selecione uma versão ou a pasta válida!';
-    Result := False;
-  end;
-
   if ValidationResult = pgDataValid then
     Result := True;
 
@@ -112,6 +118,12 @@ end;
 class procedure TServerTabController.InitializeServer(AParams : TConnectionParameters);
 begin
   TShellController.InitializeServer(AParams);
+end;
+
+
+class procedure TServerTabController.StopServer(APathBin : string; APathData : string);
+begin
+  TShellController.StopServer(APathBin,APathData);
 end;
 
 

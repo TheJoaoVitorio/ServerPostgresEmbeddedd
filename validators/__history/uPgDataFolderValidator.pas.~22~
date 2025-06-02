@@ -91,9 +91,9 @@ begin
     Exit;
   end;
 
-  if not (PgVersionFile = VersionResult) then
+  if not PgVersionFile = VersionResult then
   begin
-    ValidationResult :=  pgDataIncompatibleVersion;
+    ValidationResult =  pgDataIncompatibleVersion;
     Exit;
   end;
 

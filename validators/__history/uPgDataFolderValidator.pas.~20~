@@ -16,7 +16,6 @@ type
     pgDataMissingGlobalSubDir,
     pgDataMissingPgWalSubDir,
     pgDataMissingPostmasterPid,
-    pgDataIncompatibleVersion,
     pgDataMissingPgVersionFile,
     pgDataInvalidPgVersionContent
   );
@@ -90,13 +89,6 @@ begin
     ValidationResult := pgDataMissingPgVersionFile;
     Exit;
   end;
-
-  if not (PgVersionFile = VersionResult) then
-  begin
-    ValidationResult :=  pgDataIncompatibleVersion;
-    Exit;
-  end;
-
 
   PgVersionContent := TStringList.Create;
   try

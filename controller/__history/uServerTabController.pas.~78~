@@ -18,13 +18,14 @@ uses
 type
   TServerTabController = class
     private
-    class function GetPathBin(AVersion: Integer): String; static;
 
 
     public
       class function IsServerRunning(AParams: TConnectionParameters): Boolean;
 
-      class function GetVersionsPostgres : TDictionary<string, Integer>;
+      class function GetPathBin(AVersion: String): String;
+
+      class function GetVersionsPostgres : TDictionary<string, String>;
 
       class function ValidateFields(AParams : TConnectionParameters; out AMessageError: String): Boolean;
 
@@ -33,24 +34,25 @@ type
                                         out AMessageError: String): Boolean;
 
       class procedure InitializeServer(AParams : TConnectionParameters);
+      class procedure StopServer(APathBin, APathData: string);
   end;
 
 implementation
 
 { TServerTabController }
 
-class function TServerTabController.GetVersionsPostgres: TDictionary<string, Integer>;
+class function TServerTabController.GetVersionsPostgres: TDictionary<string, String>;
 var
   List : TObjectList<TPostgresVersion>;
-  Dict : TDictionary<String, Integer>;
+  Dict : TDictionary<String, String>;
   Item : TPostgresVersion;
 begin
-  Dict := TDictionary<String, Integer>.Create;
+  Dict := TDictionary<String, String>.Create;
 
   List := TPostgresVersion.GetAllVersions;
   try
     for Item in List do
-      Dict.AddOrSetValue('Versao' + IntToStr(Item.Version), Item.Version);
+      Dict.AddOrSetValue('Versao' + Item.Version, Item.Version);
   finally
     List.Free;
   end;
@@ -59,7 +61,7 @@ begin
 end;
 
 
-class function TServerTabController.GetPathBin(AVersion : Integer) : String;
+class function TServerTabController.GetPathBin(AVersion : String) : String;
 begin
   Result := TPostgresVersion.FetchBinaryPathByVersion(AVersion);
 end;
@@ -91,6 +93,8 @@ begin
         AMessageError := 'A pasta de dados do PostgreSQL deve conter o subdiretório "pg_wal" ou "pg_xlog".';
       pgDataMissingPostmasterPid:
         AMessageError := 'Aviso: A pasta de dados do PostgreSQL não contém "postmaster.pid" ou "postmaster.opts".';
+      pgDataIncompatibleVersion:
+        AMessageError := 'Selecione uma versão ou a pasta válida!';
       pgDataMissingPgVersionFile:
         AMessageError := 'O arquivo "PG_VERSION" não foi encontrado na pasta selecionada.';
       pgDataInvalidPgVersionContent:
@@ -119,6 +123,12 @@ end;
 class procedure TServerTabController.InitializeServer(AParams : TConnectionParameters);
 begin
   TShellController.InitializeServer(AParams);
+end;
+
+
+class procedure TServerTabController.StopServer(APathBin : string; APathData : string);
+begin
+  TShellController.StopServer(APathBin,APathData);
 end;
 
 

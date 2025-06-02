@@ -78,6 +78,7 @@ var
   ValidationResult : TPgDataFolderValidatorTypes;
   VersionPG : String;
 begin
+  Result := False;
   AMessageError:= '';
 
   if not TPgDataFolderValidator.IsPostgresDataFolder(APathData,ValidationResult,VersionPG) then
@@ -93,6 +94,8 @@ begin
         AMessageError := 'A pasta de dados do PostgreSQL deve conter o subdiretório "pg_wal" ou "pg_xlog".';
       pgDataMissingPostmasterPid:
         AMessageError := 'Aviso: A pasta de dados do PostgreSQL não contém "postmaster.pid" ou "postmaster.opts".';
+      pgDataIncompatibleVersion:
+        AMessageError := 'Selecione uma versão ou a pasta válida!';
       pgDataMissingPgVersionFile:
         AMessageError := 'O arquivo "PG_VERSION" não foi encontrado na pasta selecionada.';
       pgDataInvalidPgVersionContent:
@@ -100,17 +103,11 @@ begin
       else
         raise Exception.Create('Erro ao validar a pasta DATA do postgres');
 
-      Result := False;
+      Exit;
     end;
 
   end;
 
-
-  if not (VersionPG = AVersion) then
-  begin
-    AMessageError := 'Selecione uma versão ou a pasta válida!';
-    Result := False;
-  end;
 
   if ValidationResult = pgDataValid then
     Result := True;

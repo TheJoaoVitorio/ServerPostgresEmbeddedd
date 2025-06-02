@@ -23,9 +23,9 @@ type
     public
       class function IsServerRunning(AParams: TConnectionParameters): Boolean;
 
-      class function GetPathBin(AVersion: Integer): String;
+      class function GetPathBin(AVersion: String): String;
 
-      class function GetVersionsPostgres : TDictionary<string, Integer>;
+      class function GetVersionsPostgres : TDictionary<string, String>;
 
       class function ValidateFields(AParams : TConnectionParameters; out AMessageError: String): Boolean;
 
@@ -41,18 +41,18 @@ implementation
 
 { TServerTabController }
 
-class function TServerTabController.GetVersionsPostgres: TDictionary<string, Integer>;
+class function TServerTabController.GetVersionsPostgres: TDictionary<string, String>;
 var
   List : TObjectList<TPostgresVersion>;
-  Dict : TDictionary<String, Integer>;
+  Dict : TDictionary<String, String>;
   Item : TPostgresVersion;
 begin
-  Dict := TDictionary<String, Integer>.Create;
+  Dict := TDictionary<String, String>.Create;
 
   List := TPostgresVersion.GetAllVersions;
   try
     for Item in List do
-      Dict.AddOrSetValue('Versao' + IntToStr(Item.Version), Item.Version);
+      Dict.AddOrSetValue('Versao' + Item.Version, Item.Version);
   finally
     List.Free;
   end;
@@ -61,7 +61,7 @@ begin
 end;
 
 
-class function TServerTabController.GetPathBin(AVersion : Integer) : String;
+class function TServerTabController.GetPathBin(AVersion : String) : String;
 begin
   Result := TPostgresVersion.FetchBinaryPathByVersion(AVersion);
 end;

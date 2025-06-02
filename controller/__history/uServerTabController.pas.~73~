@@ -19,7 +19,11 @@ type
   TServerTabController = class
     private
 
+
     public
+      class function IsServerRunning(AParams: TConnectionParameters): Boolean;
+
+      class function GetPathBin(AVersion: Integer): String;
 
       class function GetVersionsPostgres : TDictionary<string, Integer>;
 
@@ -30,6 +34,7 @@ type
                                         out AMessageError: String): Boolean;
 
       class procedure InitializeServer(AParams : TConnectionParameters);
+      class procedure StopServer(APathBin, APathData: string);
   end;
 
 implementation
@@ -56,13 +61,19 @@ begin
 end;
 
 
+class function TServerTabController.GetPathBin(AVersion : Integer) : String;
+begin
+  Result := TPostgresVersion.FetchBinaryPathByVersion(AVersion);
+end;
+
+
 class function TServerTabController.ValidateFields(AParams : TConnectionParameters; out AMessageError : String) : Boolean;
 begin
   Result := TPgConnectionValidator.ValidateConnectionParameters(AParams, AMessageError);
 end;
 
 
-class function TServerTabController.ValidateDataFolder(APathData: string; AVersion : String; out AMessageError: string): Boolean;
+class function TServerTabController.ValidateDataFolder(APathData: string; AVersion : String; out AMessageError : string): Boolean;
 var
   ValidationResult : TPgDataFolderValidatorTypes;
   VersionPG : String;
@@ -109,7 +120,20 @@ end;
 
 class procedure TServerTabController.InitializeServer(AParams : TConnectionParameters);
 begin
-
+  TShellController.InitializeServer(AParams);
 end;
+
+
+class procedure TServerTabController.StopServer(APathBin : string; APathData : string);
+begin
+  TShellController.StopServer(APathBin,APathData);
+end;
+
+
+class function TServerTabController.IsServerRunning(AParams : TConnectionParameters) : Boolean;
+begin
+  Result := TShellController.IsServerRunning(AParams);
+end;
+
 
 end.

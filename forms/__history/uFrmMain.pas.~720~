@@ -538,13 +538,19 @@ end;
 
 
 procedure TfrmMain.fxButtonDisconectarServerClick(Sender: TObject);
+const WAIT_FRAME_TOAST_DESTROY : Integer = 6;
 begin
-  CloseServer;
-  isServerConnect := False;
-  FChronometerSeconds := 0;
-  DisplaySelectedTab(tabServer.PageIndex, PageControlPrincipal);
-  FrameToast := TfrToastMessage.Create(frmMain);
-  FrameToast.ShowMessageSuccess('Disconectado.');
+
+  if FChronometerSeconds > WAIT_FRAME_TOAST_DESTROY then
+  begin
+    CloseServer;
+    isServerConnect := False;
+    FChronometerSeconds := 0;
+    DisplaySelectedTab(tabServer.PageIndex, PageControlPrincipal);
+    FrameToast := TfrToastMessage.Create(frmMain);
+    FrameToast.ShowMessageSuccess('Disconectado.');
+  end;
+
 end;
 
 procedure TfrmMain.HandleToastDestroyed(Sender: TObject);
@@ -765,7 +771,7 @@ end;
 
 procedure TfrmMain.FillItemsPopupVersions;
 var
-  DictVersoes : TDictionary<String, Integer>;
+  DictVersoes : TDictionary<String, String>;
   PopUpItem : FXPopupItem;
   Versao : String;
 begin

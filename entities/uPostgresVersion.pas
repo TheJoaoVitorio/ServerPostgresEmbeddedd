@@ -16,7 +16,7 @@ uses
 type
   TPostgresVersion = class  // Representa tabela no SQLite3
     private
-      FVersion: Integer;
+      FVersion: String;
       FId: Integer;
       FPathBinPG: String;
       FPostgresName: String;
@@ -24,13 +24,13 @@ type
     public
       property Id: Integer          read FId           write FId;
       property PostgresName: String read FPostgresName write FPostgresName;
-      property Version: Integer     read FVersion      write FVersion;
+      property Version: String      read FVersion      write FVersion;
       property PathBinPG: String    read FPathBinPG    write FPathBinPG;
 
 
 
       class function GetAllVersions : TObjectList<TPostgresVersion>;
-      class function FetchBinaryPathByVersion(AVersion: Integer): String;
+      class function FetchBinaryPathByVersion(AVersion: String): String;
   end;
 
 implementation
@@ -55,7 +55,7 @@ begin
       while not Eof do
       begin
         vPGVersion          := TPostgresVersion.Create;
-        vPGVersion.FVersion := FieldByName('version').AsInteger;
+        vPGVersion.FVersion := FieldByName('version').AsString;
 
         Result.Add(vPGVersion);
       Next;
@@ -67,7 +67,7 @@ begin
 end;
 
 
-class function TPostgresVersion.FetchBinaryPathByVersion(AVersion : Integer) : String;
+class function TPostgresVersion.FetchBinaryPathByVersion(AVersion : String) : String;
 var
   vQuery : TFDQuery;
 begin
@@ -78,7 +78,7 @@ begin
                        'from tb_postgres_versions '+
                        'where version = :Version';
 
-    vQuery.ParamByName('Version').AsInteger := AVersion;
+    vQuery.ParamByName('Version').AsString := AVersion;
     vQuery.Open;
 
     Result := vQuery.FieldByName('path_bin_pg').AsString;

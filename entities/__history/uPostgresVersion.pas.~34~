@@ -16,21 +16,21 @@ uses
 type
   TPostgresVersion = class  // Representa tabela no SQLite3
     private
-      FVersion: Integer;
+      FVersion: String;
       FId: Integer;
       FPathBinPG: String;
       FPostgresName: String;
-    class function FetchBinaryPathByVersion(AVersion: Integer): String; static;
-    
+
     public
       property Id: Integer          read FId           write FId;
       property PostgresName: String read FPostgresName write FPostgresName;
-      property Version: Integer     read FVersion      write FVersion;
+      property Version: String      read FVersion      write FVersion;
       property PathBinPG: String    read FPathBinPG    write FPathBinPG;
 
 
 
       class function GetAllVersions : TObjectList<TPostgresVersion>;
+      class function FetchBinaryPathByVersion(AVersion: Integer): String;
   end;
 
 implementation
@@ -55,7 +55,7 @@ begin
       while not Eof do
       begin
         vPGVersion          := TPostgresVersion.Create;
-        vPGVersion.FVersion := FieldByName('version').AsInteger;
+        vPGVersion.FVersion := FieldByName('version').AsString;
 
         Result.Add(vPGVersion);
       Next;
@@ -71,26 +71,19 @@ class function TPostgresVersion.FetchBinaryPathByVersion(AVersion : Integer) : S
 var
   vQuery : TFDQuery;
 begin
+  vQuery := TInstanceController.GetInstance().SQLiteConnection.GetQuery;
   try
-    vQuery := TInstanceController.GetInstance().SQLiteConnection.GetQuery;
-    try
 
-      vQuery.SQL.Text := 'SELECT path_bin_pg '+
-                         'from tb_postgres_versions '+
-                         'where version = :Version';
+    vQuery.SQL.Text := 'SELECT path_bin_pg '+
+                       'from tb_postgres_versions '+
+                       'where version = :Version';
 
-      vQuery.ParamByName('Version').AsInteger := AVersion;
-      vQuery.Open;
+    vQuery.ParamByName('Version').AsInteger := AVersion;
+    vQuery.Open;
 
-      while not vQuery.Eof do
-      begin
-
-    except
-
-    end;
-
-  finally
-
+    Result := vQuery.FieldByName('path_bin_pg').AsString;
+  except
+    raise Exception.Create('Erro ao pegar o path dos binários no banco de dados!');
   end;
 end;
 

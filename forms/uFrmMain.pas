@@ -318,7 +318,7 @@ begin
   if fxSelectVersion.Text <> 'Selecione um item' then
   begin
     PathBin := IncludeTrailingPathDelimiter(
-             StringReplace(ExtractFilePath(ParamStr(0)) + TServerTabController.GetPathBin(fxSelectVersion.Text.ToInteger), '/', '\', [rfReplaceAll])
+             StringReplace(ExtractFilePath(ParamStr(0)) + TServerTabController.GetPathBin(fxSelectVersion.Text), '/', '\', [rfReplaceAll])
             );
 
     TServerTabController.StopServer(
@@ -581,7 +581,7 @@ var
   frListDatabaseItem : TfrListItemDatabase;
   PositionY : integer;
 begin
-
+  AScrollBox.DestroyAll;
   PositionY := 0;
 
   for I := 0 to AList.Count -1 do
@@ -639,7 +639,7 @@ begin
       Version  := fxSelectVersion.Text;
 
     PathBin := IncludeTrailingPathDelimiter(
-              StringReplace(ExtractFilePath(ParamStr(0)) + TServerTabController.GetPathBin(AObject.Version.ToInteger), '/', '\', [rfReplaceAll])
+              StringReplace(ExtractFilePath(ParamStr(0)) + TServerTabController.GetPathBin(AObject.Version), '/', '\', [rfReplaceAll])
             );
   end;
 
@@ -771,17 +771,17 @@ end;
 
 procedure TfrmMain.FillItemsPopupVersions;
 var
-  DictVersoes : TDictionary<String, Integer>;
-  PopUpItem : FXPopupItem;
+  DictVersoes : TDictionary<String, String>;
   Versao : String;
+  PopUpItem : FXPopupItem;
 begin
-  PopUpItem := FXPopupItem.Create(nil);
   fxPopupVersionsPostgres.Items.Clear(true);
   try
     DictVersoes := TServerTabController.GetVersionsPostgres;
     for Versao in DictVersoes.Keys do
     begin
-      PopUpItem.Text := StringReplace(Versao, 'Versao', '', [rfIgnoreCase]);   //aqui vem como Versao13
+      PopUpItem := FXPopupItem.Create(nil);  // CRIA DENTRO DO LOOP
+      PopUpItem.Text := StringReplace(Versao, 'Versao', '', [rfIgnoreCase]);
       fxPopupVersionsPostgres.Items.Add(PopUpItem);
     end;
   except

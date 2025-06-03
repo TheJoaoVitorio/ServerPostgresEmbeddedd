@@ -2,7 +2,7 @@
 
 This is a Delphi-based application designed to embed and control a PostgreSQL server instance directly within a desktop application. It allows for starting, stopping, and checking the server status programmatically, without requiring the user to manually install or configure PostgreSQL.
 
-![Config Server Screen](assets/login_screen.png)
+![Config Server Screen](assets/ServerPostgreSQLCap1.png)
 
 ## 🛠 Features
 

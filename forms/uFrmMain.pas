@@ -53,7 +53,7 @@ type
     PageControlPrincipal: TPageControl;
     tabServer: TTabSheet;
     tabSQL: TTabSheet;
-    tabRestore: TTabSheet;
+    tabBackup: TTabSheet;
     fxPanelServer: FXPanel;
     fxPanelRestore: FXPanel;
     fxPanelSQL: FXPanel;

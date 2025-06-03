@@ -131,9 +131,6 @@ Coordinates=36,77,85,58
 [fxExecAction]
 Coordinates=706,130,89,36
 
-[tabRestore]
-Coordinates=142,306,77,36
-
 [fxPanelRestore]
 Coordinates=10,146,103,58
 
@@ -405,4 +402,7 @@ Coordinates=703,581,71,58
 [fxButtonDisconectarServer]
 Coordinates=128,384,75,36
 Visible=True
+
+[tabBackup]
+Coordinates=142,306,77,36
 

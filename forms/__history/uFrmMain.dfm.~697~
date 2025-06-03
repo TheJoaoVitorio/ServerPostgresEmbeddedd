@@ -292,7 +292,6 @@ object frmMain: TfrmMain
               CustomColors.LightBackGroundInterior = 16514043
               CustomColors.DarkBackGroundInterior = 2434341
               AccentLineWidth = 8
-              ExplicitHeight = 506
               object fxPanelServerConnect: FXPanel
                 AlignWithMargins = True
                 Left = 140
@@ -325,7 +324,6 @@ object frmMain: TfrmMain
                 CustomColors.LightBackGroundInterior = 16514043
                 CustomColors.DarkBackGroundInterior = 2829099
                 AccentLineWidth = 8
-                ExplicitHeight = 446
                 object fxShapeServerConnect: FXShapeRoundedSquare
                   Left = 0
                   Top = 0
@@ -351,7 +349,6 @@ object frmMain: TfrmMain
                   Align = alClient
                   TabOrder = 0
                   CornerRadius.Around = 16.000000000000000000
-                  ExplicitHeight = 446
                 end
                 object fxPanelServerConnectContent: FXPanel
                   AlignWithMargins = True
@@ -385,7 +382,6 @@ object frmMain: TfrmMain
                   CustomColors.LightBackGroundInterior = 16514043
                   CustomColors.DarkBackGroundInterior = 2829099
                   AccentLineWidth = 8
-                  ExplicitHeight = 438
                   object fxPanelServerContentLeft: FXPanel
                     Left = 0
                     Top = 0
@@ -413,7 +409,6 @@ object frmMain: TfrmMain
                     CustomColors.LightBackGroundInterior = 16514043
                     CustomColors.DarkBackGroundInterior = 2829099
                     AccentLineWidth = 8
-                    ExplicitHeight = 438
                     object FXPanel1: FXPanel
                       AlignWithMargins = True
                       Left = 10
@@ -447,7 +442,6 @@ object frmMain: TfrmMain
                       CustomColors.LightBackGroundInterior = 16514043
                       CustomColors.DarkBackGroundInterior = 2829099
                       AccentLineWidth = 8
-                      ExplicitHeight = 418
                       object fxPanelHeaderIconLeft: FXPanel
                         AlignWithMargins = True
                         Left = 6
@@ -587,8 +581,6 @@ object frmMain: TfrmMain
                           WordWrap = True
                           Elipsis = False
                           InnerMargin = 0
-                          ExplicitLeft = 8
-                          ExplicitWidth = 183
                         end
                       end
                       object fxPanelParagraph1: FXPanel
@@ -625,7 +617,6 @@ object frmMain: TfrmMain
                         CustomColors.LightBackGroundInterior = 16514043
                         CustomColors.DarkBackGroundInterior = 2829099
                         AccentLineWidth = 8
-                        ExplicitHeight = 300
                         object FXTextBox2: FXTextBox
                           AlignWithMargins = False
                           Left = 0
@@ -765,7 +756,6 @@ object frmMain: TfrmMain
                     CustomColors.LightBackGroundInterior = 16514043
                     CustomColors.DarkBackGroundInterior = 2039583
                     AccentLineWidth = 8
-                    ExplicitHeight = 169
                     object fxPanelServerActions: FXPanel
                       Left = 0
                       Top = 407
@@ -797,7 +787,6 @@ object frmMain: TfrmMain
                       CustomColors.LightBackGroundInterior = 16514043
                       CustomColors.DarkBackGroundInterior = 2829099
                       AccentLineWidth = 8
-                      ExplicitTop = 393
                       object fxButtonConnect: FXButton
                         Left = 94
                         Top = 2
@@ -932,7 +921,6 @@ object frmMain: TfrmMain
                       AnimateScroll = True
                       KeepScrollAlignment = False
                       ScrollSpeed = 15
-                      ExplicitHeight = 67
                       object fxInputDatabase: FXPanel
                         AlignWithMargins = True
                         Left = 26
@@ -1030,7 +1018,6 @@ object frmMain: TfrmMain
                           CustomColors.LightBackGroundInterior = 16514043
                           CustomColors.DarkBackGroundInterior = 2829099
                           AccentLineWidth = 8
-                          ExplicitWidth = 73
                           object fxButtonGetFolderDatabase: FXButton
                             Left = 0
                             Top = 0
@@ -1110,7 +1097,6 @@ object frmMain: TfrmMain
                             StateImage.IconType = None
                             StateImage.SelectSegoe = #59188
                             StateImage.SelectImageIndex = 0
-                            ExplicitWidth = 73
                           end
                         end
                       end
@@ -1206,7 +1192,6 @@ object frmMain: TfrmMain
                           CustomColors.LightBackGroundInterior = 16514043
                           CustomColors.DarkBackGroundInterior = 2829099
                           AccentLineWidth = 8
-                          ExplicitWidth = 173
                           object fxEditPort: FXEdit
                             Left = 0
                             Top = 0
@@ -1252,7 +1237,6 @@ object frmMain: TfrmMain
                             ReadOnly = False
                             TextMarginX = 5
                             TextMarginY = 5
-                            ExplicitWidth = 173
                           end
                         end
                       end
@@ -1348,7 +1332,6 @@ object frmMain: TfrmMain
                           CustomColors.LightBackGroundInterior = 16514043
                           CustomColors.DarkBackGroundInterior = 2829099
                           AccentLineWidth = 8
-                          ExplicitWidth = 173
                           object fxSelectVersion: FXButton
                             Left = 0
                             Top = 0
@@ -1404,7 +1387,6 @@ object frmMain: TfrmMain
                             StateImage.IconType = None
                             StateImage.SelectSegoe = #59188
                             StateImage.SelectImageIndex = 0
-                            ExplicitWidth = 173
                           end
                         end
                       end
@@ -1500,7 +1482,6 @@ object frmMain: TfrmMain
                           CustomColors.LightBackGroundInterior = 16514043
                           CustomColors.DarkBackGroundInterior = 2829099
                           AccentLineWidth = 8
-                          ExplicitWidth = 173
                           object fxEditUser: FXEdit
                             Left = 0
                             Top = 0
@@ -1545,7 +1526,6 @@ object frmMain: TfrmMain
                             ReadOnly = False
                             TextMarginX = 5
                             TextMarginY = 5
-                            ExplicitWidth = 173
                           end
                         end
                       end
@@ -1641,7 +1621,6 @@ object frmMain: TfrmMain
                           CustomColors.LightBackGroundInterior = 16514043
                           CustomColors.DarkBackGroundInterior = 2829099
                           AccentLineWidth = 8
-                          ExplicitWidth = 173
                           object fxEditPassword: FXEdit
                             Left = 0
                             Top = 0
@@ -1686,7 +1665,6 @@ object frmMain: TfrmMain
                             ReadOnly = False
                             TextMarginX = 5
                             TextMarginY = 5
-                            ExplicitWidth = 173
                           end
                         end
                       end
@@ -1794,7 +1772,6 @@ object frmMain: TfrmMain
               CustomColors.LightBackGroundInterior = 16514043
               CustomColors.DarkBackGroundInterior = 2829099
               AccentLineWidth = 8
-              ExplicitHeight = 506
               object fxPanelSQLTabs: FXPanel
                 AlignWithMargins = True
                 Left = 0
@@ -1895,7 +1872,6 @@ object frmMain: TfrmMain
                 CustomColors.LightBackGroundInterior = 16514043
                 CustomColors.DarkBackGroundInterior = 2829099
                 AccentLineWidth = 8
-                ExplicitHeight = 383
                 object PageControlSQL: TPageControl
                   Left = 0
                   Top = 0
@@ -1906,14 +1882,13 @@ object frmMain: TfrmMain
                   Style = tsButtons
                   TabOrder = 0
                   StyleElements = []
-                  ExplicitHeight = 383
                   object tabQuery: TTabSheet
                     Caption = 'Query'
                     object fxPanelQuery: FXPanel
                       Left = 0
                       Top = 0
                       Width = 756
-                      Height = 340
+                      Height = 354
                       Align = alClient
                       BevelOuter = bvNone
                       Color = 2105376
@@ -1938,7 +1913,7 @@ object frmMain: TfrmMain
                       AccentLineWidth = 8
                       object Splitter1: TSplitter
                         Left = 0
-                        Top = 297
+                        Top = 311
                         Width = 756
                         Height = 2
                         Cursor = crSizeNS
@@ -1953,7 +1928,7 @@ object frmMain: TfrmMain
                         Left = 0
                         Top = 0
                         Width = 756
-                        Height = 297
+                        Height = 311
                         Align = alClient
                         BevelOuter = bvNone
                         Color = 15987699
@@ -1980,7 +1955,7 @@ object frmMain: TfrmMain
                           Left = 0
                           Top = 0
                           Width = 49
-                          Height = 297
+                          Height = 311
                           Align = alLeft
                           BevelInner = bvNone
                           BevelOuter = bvNone
@@ -2007,7 +1982,6 @@ object frmMain: TfrmMain
                           OnChange = mmQueryChange
                           OnKeyDown = mmQueryKeyDown
                           OnKeyUp = mmQueryKeyUp
-                          ExplicitHeight = 297
                         end
                       end
                       object fxPanelGridQuery: FXPanel
@@ -2038,7 +2012,6 @@ object frmMain: TfrmMain
                         CustomColors.DarkBackGroundInterior = 1447446
                         AccentLine = True
                         AccentLineWidth = 8
-                        ExplicitTop = 299
                         object fxShapeGridQuery: FXShapeRoundedSquare
                           Left = 0
                           Top = 0
@@ -2147,8 +2120,6 @@ object frmMain: TfrmMain
                       CustomColors.LightBackGroundInterior = 16514043
                       CustomColors.DarkBackGroundInterior = 2829099
                       AccentLineWidth = 8
-                      ExplicitWidth = 442
-                      ExplicitHeight = 71
                       object fxPanelShowQuery: FXPanel
                         Left = 244
                         Top = 0
@@ -2177,12 +2148,11 @@ object frmMain: TfrmMain
                         CustomColors.LightBackGroundInterior = 16514043
                         CustomColors.DarkBackGroundInterior = 2829099
                         AccentLineWidth = 8
-                        ExplicitHeight = 340
                         object fxPanelShowQueryContainer: FXPanel
                           Left = 0
                           Top = 0
                           Width = 512
-                          Height = 340
+                          Height = 354
                           Align = alClient
                           BevelOuter = bvNone
                           Color = 15987699
@@ -2210,7 +2180,7 @@ object frmMain: TfrmMain
                             Left = 0
                             Top = 36
                             Width = 512
-                            Height = 304
+                            Height = 318
                             Margins.Left = 0
                             Margins.Top = 36
                             Margins.Right = 0
@@ -2248,14 +2218,14 @@ object frmMain: TfrmMain
                               Left = 5
                               Top = 5
                               Width = 502
-                              Height = 294
+                              Height = 308
                               Margins.Left = 0
                               Margins.Top = 0
                               Margins.Right = 0
                               Margins.Bottom = 0
                               Transparent = False
                               Size.X = 502
-                              Size.Y = 294
+                              Size.Y = 308
                               Position.X = 5
                               Position.Y = 5
                               CustomColors.Enabled = True
@@ -2276,7 +2246,7 @@ object frmMain: TfrmMain
                               Left = 25
                               Top = 25
                               Width = 462
-                              Height = 254
+                              Height = 268
                               Margins.Left = 20
                               Margins.Top = 20
                               Margins.Right = 20
@@ -2374,7 +2344,7 @@ object frmMain: TfrmMain
                                 Left = 8
                                 Top = 41
                                 Width = 446
-                                Height = 205
+                                Height = 219
                                 Margins.Left = 8
                                 Margins.Top = 8
                                 Margins.Right = 8
@@ -2406,7 +2376,7 @@ object frmMain: TfrmMain
                                   Left = 6
                                   Top = 6
                                   Width = 434
-                                  Height = 193
+                                  Height = 207
                                   Margins.Left = 6
                                   Margins.Top = 6
                                   Margins.Right = 6
@@ -2456,7 +2426,6 @@ object frmMain: TfrmMain
                         CustomColors.LightBackGroundInterior = 2105376
                         CustomColors.DarkBackGroundInterior = 2105376
                         AccentLineWidth = 8
-                        ExplicitHeight = 71
                         object fxPanelHeaderListQueries: FXPanel
                           AlignWithMargins = True
                           Left = 0
@@ -2553,20 +2522,19 @@ object frmMain: TfrmMain
                           CustomColors.LightBackGroundInterior = 16514043
                           CustomColors.DarkBackGroundInterior = 2105376
                           AccentLineWidth = 8
-                          ExplicitHeight = 294
                           object fxShapeListQueries: FXShapeRoundedSquare
                             AlignWithMargins = False
                             Left = 0
                             Top = 0
                             Width = 219
-                            Height = 294
+                            Height = 308
                             Margins.Left = 0
                             Margins.Top = 0
                             Margins.Right = 0
                             Margins.Bottom = 0
                             Transparent = False
                             Size.X = 219
-                            Size.Y = 294
+                            Size.Y = 308
                             Position.X = 0
                             Position.Y = 0
                             CustomColors.Enabled = True
@@ -2587,7 +2555,7 @@ object frmMain: TfrmMain
                             Left = 2
                             Top = 2
                             Width = 215
-                            Height = 290
+                            Height = 304
                             Margins.Left = 2
                             Margins.Top = 2
                             Margins.Right = 2
@@ -2619,7 +2587,7 @@ object frmMain: TfrmMain
                               Left = 3
                               Top = 3
                               Width = 209
-                              Height = 284
+                              Height = 298
                               Align = alClient
                               BiDiMode = bdRightToLeftReadingOnly
                               BorderStyle = bsNone
@@ -2832,7 +2800,7 @@ object frmMain: TfrmMain
               Left = 0
               Top = 0
               Width = 764
-              Height = 506
+              Height = 520
               Align = alClient
               BevelOuter = bvNone
               Color = 2105376
@@ -4750,9 +4718,9 @@ object frmMain: TfrmMain
                 object fxPanelTextConnections: FXPanel
                   AlignWithMargins = True
                   Left = 35
-                  Top = 299
+                  Top = 314
                   Width = 694
-                  Height = 221
+                  Height = 206
                   Margins.Left = 35
                   Margins.Top = 0
                   Margins.Right = 35
@@ -4780,11 +4748,14 @@ object frmMain: TfrmMain
                   CustomColors.LightBackGroundInterior = 16514043
                   CustomColors.DarkBackGroundInterior = 2829099
                   AccentLineWidth = 8
+                  ExplicitTop = 299
+                  ExplicitHeight = 221
                   object FXScrollBox3: FXScrollBox
                     Left = 0
                     Top = 0
                     Width = 694
-                    Height = 221
+                    Height = 206
+                    VertScrollBar.Position = 65
                     Align = alClient
                     BorderStyle = bsNone
                     Color = 15987699
@@ -4801,10 +4772,11 @@ object frmMain: TfrmMain
                     AnimateScroll = True
                     KeepScrollAlignment = False
                     ScrollSpeed = 25
+                    ExplicitHeight = 221
                     object fxPanelBancoDeDadosTitle: FXPanel
                       AlignWithMargins = True
                       Left = 160
-                      Top = 0
+                      Top = -65
                       Width = 357
                       Height = 49
                       Margins.Left = 160
@@ -4916,17 +4888,17 @@ object frmMain: TfrmMain
                           ExplicitHeight = 204
                         end
                         object fxTextBancoDeDadosTitle: FXTextBox
-                          Left = 35
+                          Left = 41
                           Top = 0
-                          Width = 322
+                          Width = 316
                           Height = 48
-                          Margins.Left = 0
+                          Margins.Left = 6
                           Margins.Top = 0
                           Margins.Right = 0
                           Margins.Bottom = 0
-                          Size.X = 322
+                          Size.X = 316
                           Size.Y = 48
-                          Position.X = 35
+                          Position.X = 41
                           Position.Y = 0
                           CustomColors.Enabled = True
                           CustomColors.Accent = 13924352
@@ -4945,6 +4917,8 @@ object frmMain: TfrmMain
                           AutoSize = True
                           Elipsis = False
                           InnerMargin = 0
+                          ExplicitLeft = 35
+                          ExplicitWidth = 322
                         end
                       end
                       object FXShapeRoundedSquare2: FXShapeRoundedSquare
@@ -4980,7 +4954,7 @@ object frmMain: TfrmMain
                     object fxPanelBancoDeDadosContent: FXPanel
                       AlignWithMargins = True
                       Left = 160
-                      Top = 59
+                      Top = -6
                       Width = 357
                       Height = 150
                       Margins.Left = 160
@@ -5036,7 +5010,7 @@ object frmMain: TfrmMain
                     object fxPanelConfiguracoesTitle: FXPanel
                       AlignWithMargins = True
                       Left = 160
-                      Top = 219
+                      Top = 154
                       Width = 357
                       Height = 49
                       Margins.Left = 160
@@ -5137,17 +5111,17 @@ object frmMain: TfrmMain
                           ExplicitHeight = 204
                         end
                         object fxTextConfiguracoesServerOnlineTitle: FXTextBox
-                          Left = 35
+                          Left = 41
                           Top = 0
-                          Width = 322
+                          Width = 316
                           Height = 48
-                          Margins.Left = 0
+                          Margins.Left = 6
                           Margins.Top = 0
                           Margins.Right = 0
                           Margins.Bottom = 0
-                          Size.X = 322
+                          Size.X = 316
                           Size.Y = 48
-                          Position.X = 35
+                          Position.X = 41
                           Position.Y = 0
                           CustomColors.Enabled = True
                           CustomColors.Accent = 13924352
@@ -5166,6 +5140,8 @@ object frmMain: TfrmMain
                           AutoSize = True
                           Elipsis = False
                           InnerMargin = 0
+                          ExplicitLeft = 35
+                          ExplicitWidth = 322
                         end
                       end
                       object FXShapeRoundedSquare1: FXShapeRoundedSquare
@@ -5201,7 +5177,7 @@ object frmMain: TfrmMain
                     object fxPanelConfiguracoesContent: FXPanel
                       AlignWithMargins = True
                       Left = 160
-                      Top = 278
+                      Top = 213
                       Width = 357
                       Height = 108
                       Margins.Left = 160
@@ -5618,7 +5594,7 @@ object frmMain: TfrmMain
                   Left = 350
                   Top = 259
                   Width = 64
-                  Height = 40
+                  Height = 55
                   Margins.Left = 350
                   Margins.Top = 0
                   Margins.Right = 350
@@ -5650,13 +5626,13 @@ object frmMain: TfrmMain
                     Left = 0
                     Top = 0
                     Width = 64
-                    Height = 40
+                    Height = 55
                     Margins.Left = 0
                     Margins.Top = 0
                     Margins.Right = 0
                     Margins.Bottom = 0
                     Size.X = 64
-                    Size.Y = 40
+                    Size.Y = 55
                     Position.X = 0
                     Position.Y = 0
                     CustomColors.Enabled = False

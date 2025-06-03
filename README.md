@@ -1,24 +1,29 @@
 # PostgreSQL Embedded Server
 
-This is a Delphi-based application designed to embed and control a PostgreSQL server instance directly within a desktop application. It allows for starting, stopping, and checking the server status programmatically, without requiring the user to manually install or configure PostgreSQL.
+Este é um projeto desenvolvido em **Delphi** que permite **embutir e controlar uma instância do servidor PostgreSQL** diretamente dentro de uma aplicação desktop.
 
-![Config Server Screen](assets/ServerPostgreSQLCap1.png)
+> ⚙️ **Objetivo do Projeto**  
+> Este projeto foi criado com o intuito de **acessar bancos de dados PostgreSQL apenas com a pasta `data`**, **sem precisar das credenciais do servidor original**. Isso é especialmente útil para realizar **conversões de dados de sistemas que utilizam PostgreSQL**, facilitando a migração e análise de dados de forma rápida e autônoma.
 
-## 🛠 Features
+![Tela de Configuração do Servidor](assets/ServerPostgreSQLCap1.png)
 
-- ✅ Start PostgreSQL server via `pg_ctl`
-- 🔍 Check if the server is running
-- 📄 Automatically update `pg_hba.conf` authentication from `md5` or `scram-sha-256` to `trust`
-- 📦 Includes all PostgreSQL binaries within the application
-- 💡 Designed for embedded/local use in Windows
+---
 
-## 🧰 Technologies Used
+## 🛠 Funcionalidades
+
+- ✅ Inicia o servidor PostgreSQL usando `pg_ctl`
+- 🔍 Verifica se o servidor está em execução
+- 🛡 Atualiza automaticamente o arquivo `pg_hba.conf`, alterando autenticações `md5` ou `scram-sha-256` para `trust`
+- 💡 Uso local e embarcado em **Windows**
+
+---
+
+## 🧰 Tecnologias Utilizadas
 
 - **Delphi (VCL)**
 - **Codrut Fluent Design System - VCL Components**
-- **PostgreSQL binaries**
-- **Windows API** (`CreateProcess`, `ReadPipe`, etc.)
-- **FireDAC** (optional, for DB access)
+- **Binários do PostgreSQL**
+- **API do Windows** (`CreateProcess`, `ReadPipe`, etc.)
+- **FireDAC** (opcional, para conexão e manipulação dos dados do banco)
 
-![Server Running Screen](assets/ServerPostgreSQLCap2.png)
-
+![Servidor em Execução](assets/ServerPostgreSQLCap2.png)

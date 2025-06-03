@@ -15,6 +15,8 @@ Este é um projeto desenvolvido em **Delphi** que permite **embutir e controlar 
 - 🔍 Verifica se o servidor está em execução
 - 🛡 Atualiza automaticamente o arquivo `pg_hba.conf`, alterando autenticações `md5` ou `scram-sha-256` para `trust`
 - 💡 Uso local e embarcado em **Windows**
+- 🧾 Permite execução de **consultas SQL** diretamente
+- 💾 Funcionalidade para realizar **backup do banco de dados**
 
 ---
 

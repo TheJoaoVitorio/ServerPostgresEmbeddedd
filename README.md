@@ -20,5 +20,5 @@ This is a Delphi-based application designed to embed and control a PostgreSQL se
 - **Windows API** (`CreateProcess`, `ReadPipe`, etc.)
 - **FireDAC** (optional, for DB access)
 
-![Server Running Screen](assets/login_screen.png)
+![Server Running Screen](assets/ServerPostgreSQLCap2.png)
 

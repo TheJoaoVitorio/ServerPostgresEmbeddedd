@@ -9,14 +9,15 @@ uses
    ShellAPI, Windows, SysUtils, System.Classes;
 
 type
-  //u_long = Cardinal;
 
   TShellController = class
     private
 
+
     public
       class procedure InitializeServer(AParams : TConnectionParameters);
       class procedure StopServer(APathBin : String; APathData : String);
+      class procedure UpdatePgHbaAuthToTrust(AParams: TConnectionParameters);
 
       class function IsServerRunning(AParams : TConnectionParameters): Boolean;
       class function ListDatabases(AParams : TConnectionParameters): TStringList;
@@ -149,7 +150,6 @@ begin
   Result := TStringList.Create;
   AppPath := IncludeTrailingPathDelimiter(AParams.PathBin) + 'psql.exe';
 
-  // Define a senha no ambiente antes de executar
   SetEnvironmentVariable('PGPASSWORD', PChar(AParams.Password));
 
   CmdLine := Format('"%s" -U %s -p %s -d postgres -c "SELECT datname FROM pg_database WHERE datistemplate = false;"',
@@ -204,8 +204,50 @@ begin
     SL.Free;
   end;
 
-  // Remove a variável de ambiente
+
   SetEnvironmentVariable('PGPASSWORD', nil);
+end;
+
+
+class procedure TShellController.UpdatePgHbaAuthToTrust(AParams : TConnectionParameters);
+var
+  FilePath: string;
+  FileLines: TStringList;
+  I: Integer;
+  Modified: Boolean;
+begin
+  FilePath := IncludeTrailingPathDelimiter(AParams.PathData) + 'pg_hba.conf';
+
+  if not FileExists(FilePath) then
+    raise Exception.CreateFmt('"pg_hba.conf" file not found at: %s', [FilePath]);
+
+  FileLines := TStringList.Create;
+  try
+    FileLines.LoadFromFile(FilePath);
+    Modified := False;
+
+    for I := 0 to FileLines.Count - 1 do
+    begin
+
+      if (not FileLines[I].Trim.StartsWith('#')) and
+         ((Pos('md5', FileLines[I]) > 0) or (Pos('scram-sha-256', FileLines[I]) > 0)) then
+      begin
+        FileLines[I] := StringReplace(FileLines[I], 'md5', 'trust', [rfReplaceAll]);
+        FileLines[I] := StringReplace(FileLines[I], 'scram-sha-256', 'trust', [rfReplaceAll]);
+        Modified := True;
+      end;
+
+    end;
+
+    if Modified then
+    begin
+      FileLines.SaveToFile(FilePath);
+    end;
+
+
+  finally
+    FileLines.Free;
+  end;
 end;
 
 

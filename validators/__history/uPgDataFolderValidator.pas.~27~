@@ -109,7 +109,7 @@ begin
           Exit;
         end;
 
-        if not (Version = VersionFound) then
+        if not (PgVersionFile = VersionFound) then
         begin
           ValidationResult :=  pgDataIncompatibleVersion;
           Exit;

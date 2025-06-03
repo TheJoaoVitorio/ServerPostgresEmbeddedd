@@ -14,9 +14,11 @@ type
   TShellController = class
     private
 
+
     public
       class procedure InitializeServer(AParams : TConnectionParameters);
       class procedure StopServer(APathBin : String; APathData : String);
+      class procedure UpdatePgHbaAuthToTrust(AParams: TConnectionParameters);
 
       class function IsServerRunning(AParams : TConnectionParameters): Boolean;
       class function ListDatabases(AParams : TConnectionParameters): TStringList;
@@ -52,7 +54,7 @@ begin
 end;
 
 
-class procedure TShellController.StopServer(APathBin : String; APathData : String);;
+class procedure TShellController.StopServer(APathBin : String; APathData : String);
 var
   StartupInfo: TStartupInfo;
   ProcessInfo: TProcessInformation;
@@ -66,7 +68,7 @@ begin
 
   AppPath := IncludeTrailingPathDelimiter(APathBin) + 'pg_ctl.exe';
 
-  CmdLine := Format('"%s" -D "%s" stop', [AppPath, AParams.PathData]);
+  CmdLine := Format('"%s" -D "%s" stop', [AppPath, APathData]);
 
   if not CreateProcess(nil, PChar(CmdLine), nil, nil, False, 0, nil, nil, StartupInfo, ProcessInfo) then
     raise Exception.CreateFmt('Erro ao parar o servidor: %s', [SysErrorMessage(GetLastError)]);
@@ -190,7 +192,6 @@ begin
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
 
-  // Pós-processamento: extrair linhas com nomes de banco válidos
   SL := TStringList.Create;
   try
     SL.Text := Output;
@@ -205,8 +206,47 @@ begin
     SL.Free;
   end;
 
-  // Remove a variável de ambiente para segurança
+  // Remove a variável de ambiente
   SetEnvironmentVariable('PGPASSWORD', nil);
+end;
+
+
+class procedure TShellController.UpdatePgHbaAuthToTrust(AParams : TConnectionParameters);
+var
+  FilePath: string;
+  FileLines: TStringList;
+  I: Integer;
+  Modified: Boolean;
+begin
+  FilePath := IncludeTrailingPathDelimiter(AParams.PathData) + 'pg_hba.conf';
+
+  if not FileExists(FilePath) then
+    raise Exception.CreateFmt('pg_hba.conf file not found at: %s', [FilePath]);
+
+  FileLines := TStringList.Create;
+  try
+    FileLines.LoadFromFile(FilePath);
+    Modified := False;
+
+    for I := 0 to FileLines.Count - 1 do
+    begin
+
+      if (not FileLines[I].Trim.StartsWith('#')) and (Pos('md5', FileLines[I]) > 0) then
+      begin
+        FileLines[I] := StringReplace(FileLines[I], 'md5', 'trust', [rfReplaceAll]);
+        Modified := True;
+      end;
+
+    end;
+
+    if Modified then
+    begin
+      FileLines.SaveToFile(FilePath);
+    end
+
+  finally
+    FileLines.Free;
+  end;
 end;
 
 

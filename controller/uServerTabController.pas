@@ -20,6 +20,7 @@ type
     private
 
 
+
     public
       class function IsServerRunning(AParams: TConnectionParameters): Boolean;
 
@@ -35,6 +36,7 @@ type
 
       class procedure InitializeServer(AParams : TConnectionParameters);
       class procedure StopServer(APathBin, APathData: string);
+      class procedure UpdateFilePgHbgConf(AParams: TConnectionParameters);
   end;
 
 implementation
@@ -81,7 +83,7 @@ begin
   Result := False;
   AMessageError:= '';
 
-  if not TPgDataFolderValidator.IsPostgresDataFolder(APathData,ValidationResult,VersionPG) then
+  if not TPgDataFolderValidator.IsPostgresDataFolder(APathData, AVersion, ValidationResult) then
   begin
     case ValidationResult of
       pgDataPathNotFound:
@@ -132,5 +134,10 @@ begin
   Result := TShellController.IsServerRunning(AParams);
 end;
 
+
+class procedure TServerTabController.UpdateFilePgHbgConf(AParams : TConnectionParameters);
+begin
+  TShellController.UpdatePgHbaAuthToTrust(AParams);
+end;
 
 end.

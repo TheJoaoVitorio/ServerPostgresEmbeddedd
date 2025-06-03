@@ -245,6 +245,7 @@ type
     procedure DisplayServerOnlineListDatabasesUI(AParams : TConnectionParameters);
     procedure FillScrollBoxWithFrameDatabaseItem(AScrollBox: FXScrollBox;
       AList: TStringList);
+    procedure UpdateFilePgHbaConf(AParams: TConnectionParameters);
 
     property isServerConnect : Boolean read FisServerConnect write SetIsServerConnect;
   public
@@ -370,6 +371,7 @@ begin
       TimerServerOnline.Enabled := False;
     end;
 end;
+
 
 procedure TfrmMain.dbGridQueryResultsDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 var
@@ -517,6 +519,8 @@ begin
     if not ValidateFolder(AObjectParams) then
       Exit;
 
+    UpdateFilePgHbaConf(AObjectParams);
+
     InitializeServer(AObjectParams);
 
     if TServerTabController.IsServerRunning(AObjectParams) then
@@ -552,6 +556,7 @@ begin
   end;
 
 end;
+
 
 procedure TfrmMain.HandleToastDestroyed(Sender: TObject);
 begin
@@ -680,6 +685,12 @@ begin
 end;
 
 
+procedure TfrmMain.UpdateFilePgHbaConf(AParams : TConnectionParameters);
+begin
+  TServerTabController.UpdateFilePgHbgConf(AParams);
+end;
+
+
 procedure TfrmMain.fxButtonGetFolderDatabaseClick(Sender: TObject);
 var
   OpenDialog : TFileOpenDialog;
@@ -780,7 +791,7 @@ begin
     DictVersoes := TServerTabController.GetVersionsPostgres;
     for Versao in DictVersoes.Keys do
     begin
-      PopUpItem := FXPopupItem.Create(nil);  // CRIA DENTRO DO LOOP
+      PopUpItem := FXPopupItem.Create(nil);
       PopUpItem.Text := StringReplace(Versao, 'Versao', '', [rfIgnoreCase]);
       fxPopupVersionsPostgres.Items.Add(PopUpItem);
     end;

@@ -8,31 +8,38 @@ uses
   System.Classes;
 
 type
-  TPgDataFolderValidator = (
+
+  TPgDataFolderValidatorTypes = (
     pgDataValid,
     pgDataPathNotFound,
     pgDataMissingBaseSubDir,
     pgDataMissingGlobalSubDir,
     pgDataMissingPgWalSubDir,
     pgDataMissingPostmasterPid,
+    pgDataIncompatibleVersion,
     pgDataMissingPgVersionFile,
     pgDataInvalidPgVersionContent
   );
 
-function IsPostgresDataFolder(const FolderPath: string;
-                              out ValidationResult: TPgDataFolderValidator;
-                              out VersionResult: string): Boolean;
+  TPgDataFolderValidator = class
+    private
+    public
+      class function IsPostgresDataFolder(const FolderPath: string;
+                              Version: string;
+                              out ValidationResult: TPgDataFolderValidatorTypes): Boolean;
+  end;
 
 implementation
 
-function IsPostgresDataFolder(const FolderPath: string;
-                              out ValidationResult: TPgDataFolderValidator;
-                              out VersionResult: string): Boolean;
+class function TPgDataFolderValidator.IsPostgresDataFolder(const FolderPath: string;
+                              Version: string;
+                              out ValidationResult: TPgDataFolderValidatorTypes
+                              ): Boolean;
 var
   BaseDir: string;
   GlobalDir: string;
   PgWalDir: string;
-  PgXlogDir: string; // Compatibilidade com versões antigas
+  PgXlogDir: string;
   PostmasterPidFile: string;
   PostmasterOptsFile: string;
   PgVersionFile: string;
@@ -41,13 +48,12 @@ var
 begin
   Result := False;
   ValidationResult := pgDataPathNotFound;
-  VersionResult := '';
+  //VersionResult := '';
 
-  // 1. Verificar se o caminho existe e é um diretório
+
   if not DirectoryExists(FolderPath) then
     Exit;
 
-  // 2. Verificar subdiretórios essenciais
   BaseDir := IncludeTrailingPathDelimiter(FolderPath) + 'base';
   GlobalDir := IncludeTrailingPathDelimiter(FolderPath) + 'global';
   PgWalDir := IncludeTrailingPathDelimiter(FolderPath) + 'pg_wal';
@@ -86,6 +92,9 @@ begin
     Exit;
   end;
 
+
+
+
   PgVersionContent := TStringList.Create;
   try
     try
@@ -96,6 +105,12 @@ begin
         if not TryStrToFloat(StringReplace(VersionResult, '.', '', [rfReplaceAll]), DummyFloat) then
         begin
           ValidationResult := pgDataInvalidPgVersionContent;
+          Exit;
+        end;
+
+        if not (PgVersionFile = VersionResult) then
+        begin
+          ValidationResult :=  pgDataIncompatibleVersion;
           Exit;
         end;
       end

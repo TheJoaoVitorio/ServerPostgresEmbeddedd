@@ -14,9 +14,11 @@ type
   TShellController = class
     private
 
+
     public
       class procedure InitializeServer(AParams : TConnectionParameters);
       class procedure StopServer(APathBin : String; APathData : String);
+      class procedure UpdatePgHbaAuthToTrust(AParams: TConnectionParameters; out AMessageResponse : String);
 
       class function IsServerRunning(AParams : TConnectionParameters): Boolean;
       class function ListDatabases(AParams : TConnectionParameters): TStringList;
@@ -204,8 +206,51 @@ begin
     SL.Free;
   end;
 
-  // Remove a variável de ambiente para segurança
+  // Remove a variável de ambiente
   SetEnvironmentVariable('PGPASSWORD', nil);
+end;
+
+
+class procedure TShellController.UpdatePgHbaAuthToTrust(AParams : TConnectionParameters; out AMessageResponse : String);
+var
+  FilePath: string;
+  FileLines: TStringList;
+  I: Integer;
+  Modified: Boolean;
+begin
+  FilePath := IncludeTrailingPathDelimiter(AParams.PathData) + 'pg_hba.conf';
+
+  if not FileExists(FilePath) then
+    raise Exception.CreateFmt('pg_hba.conf file not found at: %s', [FilePath]);
+
+  FileLines := TStringList.Create;
+  try
+    FileLines.LoadFromFile(FilePath);
+    Modified := False;
+
+    for I := 0 to FileLines.Count - 1 do
+    begin
+
+      if (not FileLines[I].Trim.StartsWith('#')) and (Pos('md5', FileLines[I]) > 0) then
+      begin
+        FileLines[I] := StringReplace(FileLines[I], 'md5', 'trust', [rfReplaceAll]);
+        Modified := True;
+      end;
+
+    end;
+
+    if Modified then
+    begin
+      FileLines.SaveToFile(FilePath);
+      AMessageResponse := ('O arquivo "pg_hba.conf" foi atualizado com sucesso. "md5" foi substituído por "trust".');
+    end
+    else
+      AMessageResponse := ('Nenhuma ocorrência de "md5" foi encontrada no arquivo "pg_hba.conf".');
+
+
+  finally
+    FileLines.Free;
+  end;
 end;
 
 

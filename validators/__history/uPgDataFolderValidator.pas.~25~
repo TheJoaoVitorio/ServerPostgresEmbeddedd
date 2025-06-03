@@ -8,25 +8,31 @@ uses
   System.Classes;
 
 type
-  TPgDataFolderValidator = (
+
+  TPgDataFolderValidatorTypes = (
     pgDataValid,
     pgDataPathNotFound,
     pgDataMissingBaseSubDir,
     pgDataMissingGlobalSubDir,
     pgDataMissingPgWalSubDir,
     pgDataMissingPostmasterPid,
+    pgDataIncompatibleVersion,
     pgDataMissingPgVersionFile,
     pgDataInvalidPgVersionContent
   );
 
-function IsPostgresDataFolder(const FolderPath: string;
-                              out ValidationResult: TPgDataFolderValidator;
+  TPgDataFolderValidator = class
+    private
+    public
+      class function IsPostgresDataFolder(const FolderPath: string;
+                              out ValidationResult: TPgDataFolderValidatorTypes;
                               out VersionResult: string): Boolean;
+  end;
 
 implementation
 
-function IsPostgresDataFolder(const FolderPath: string;
-                              out ValidationResult: TPgDataFolderValidator;
+class function TPgDataFolderValidator.IsPostgresDataFolder(const FolderPath: string;
+                              out ValidationResult: TPgDataFolderValidatorTypes;
                               out VersionResult: string): Boolean;
 var
   BaseDir: string;
@@ -41,7 +47,7 @@ var
 begin
   Result := False;
   ValidationResult := pgDataPathNotFound;
-  VersionResult := '';
+  //VersionResult := '';
 
 
   if not DirectoryExists(FolderPath) then
@@ -85,6 +91,9 @@ begin
     Exit;
   end;
 
+
+
+
   PgVersionContent := TStringList.Create;
   try
     try
@@ -95,6 +104,12 @@ begin
         if not TryStrToFloat(StringReplace(VersionResult, '.', '', [rfReplaceAll]), DummyFloat) then
         begin
           ValidationResult := pgDataInvalidPgVersionContent;
+          Exit;
+        end;
+
+        if not (PgVersionFile = VersionResult) then
+        begin
+          ValidationResult :=  pgDataIncompatibleVersion;
           Exit;
         end;
       end

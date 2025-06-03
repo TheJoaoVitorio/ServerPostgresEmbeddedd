@@ -9,14 +9,16 @@ uses
    ShellAPI, Windows, SysUtils, System.Classes;
 
 type
-  u_long = Cardinal;
+  //u_long = Cardinal;
 
   TShellController = class
     private
 
+
     public
       class procedure InitializeServer(AParams : TConnectionParameters);
-      class procedure StopServer(AParams : TConnectionParameters);
+      class procedure StopServer(APathBin : String; APathData : String);
+      class procedure UpdatePgHbaAuthToTrust(AParams: TConnectionParameters);
 
       class function IsServerRunning(AParams : TConnectionParameters): Boolean;
       class function ListDatabases(AParams : TConnectionParameters): TStringList;
@@ -52,7 +54,7 @@ begin
 end;
 
 
-class procedure TShellController.StopServer(AParams : TConnectionParameters);
+class procedure TShellController.StopServer(APathBin : String; APathData : String);
 var
   StartupInfo: TStartupInfo;
   ProcessInfo: TProcessInformation;
@@ -64,15 +66,13 @@ begin
   StartupInfo.dwFlags := STARTF_USESHOWWINDOW;
   StartupInfo.wShowWindow := SW_HIDE;
 
-  AppPath := IncludeTrailingPathDelimiter(AParams.PathBin) + 'pg_ctl.exe';
+  AppPath := IncludeTrailingPathDelimiter(APathBin) + 'pg_ctl.exe';
 
-  // Comando para parar o servidor
-  CmdLine := Format('"%s" -D "%s" stop', [AppPath, AParams.PathData]);
+  CmdLine := Format('"%s" -D "%s" stop', [AppPath, APathData]);
 
   if not CreateProcess(nil, PChar(CmdLine), nil, nil, False, 0, nil, nil, StartupInfo, ProcessInfo) then
     raise Exception.CreateFmt('Erro ao parar o servidor: %s', [SysErrorMessage(GetLastError)]);
 
-  // Fecha os handles
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
 end;
@@ -115,7 +115,6 @@ begin
     Exit;
   end;
 
-  // Fecha o handle de escrita para que possamos ler a saída
   CloseHandle(WritePipe);
 
   Output := '';
@@ -130,8 +129,9 @@ begin
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
 
+  Result := (Pos('server is running', LowerCase(Output)) > 0) or
+            (Pos('servidor está executando', LowerCase(Output)) > 0);
 
-  Result := Pos('server is running', LowerCase(Output)) > 0;
 end;
 
 
@@ -192,7 +192,6 @@ begin
   CloseHandle(ProcessInfo.hProcess);
   CloseHandle(ProcessInfo.hThread);
 
-  // Pós-processamento: extrair linhas com nomes de banco válidos
   SL := TStringList.Create;
   try
     SL.Text := Output;
@@ -207,8 +206,50 @@ begin
     SL.Free;
   end;
 
-  // Remove a variável de ambiente para segurança
+
   SetEnvironmentVariable('PGPASSWORD', nil);
+end;
+
+
+class procedure TShellController.UpdatePgHbaAuthToTrust(AParams : TConnectionParameters);
+var
+  FilePath: string;
+  FileLines: TStringList;
+  I: Integer;
+  Modified: Boolean;
+begin
+  FilePath := IncludeTrailingPathDelimiter(AParams.PathData) + 'pg_hba.conf';
+
+  if not FileExists(FilePath) then
+    raise Exception.CreateFmt('"pg_hba.conf" file not found at: %s', [FilePath]);
+
+  FileLines := TStringList.Create;
+  try
+    FileLines.LoadFromFile(FilePath);
+    Modified := False;
+
+    for I := 0 to FileLines.Count - 1 do
+    begin
+
+      if (not FileLines[I].Trim.StartsWith('#')) and
+         ((Pos('md5', FileLines[I]) > 0) or (Pos('scram-sha-256', FileLines[I]) > 0)) then
+      begin
+        FileLines[I] := StringReplace(FileLines[I], 'md5', 'trust', [rfReplaceAll]);
+        FileLines[I] := StringReplace(FileLines[I], 'scram-sha-256', 'trust', [rfReplaceAll]);
+        Modified := True;
+      end;
+
+    end;
+
+    if Modified then
+    begin
+      FileLines.SaveToFile(FilePath);
+    end;
+
+
+  finally
+    FileLines.Free;
+  end;
 end;
 
 
